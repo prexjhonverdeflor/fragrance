@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AEON — Haute Parfumerie</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          heading: ["'Instrument Serif'", "serif"],
+          body: ["'Barlow'", "sans-serif"],
+        },
+        borderRadius: { DEFAULT: "9999px" },
+      },
+    },
+  };
+</script>
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/framer-motion/dist/framer-motion.js"></script>
+<script>
+  const motion = window.Motion?.motion || { div:"div", p:"p", span:"span", section:"section", h2:"h2" };
+  const useInView = window.Motion?.useInView || (() => true);
+</script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  html, body { background: #000; min-height: 100vh; }
+
+  .liquid-glass {
+    background: rgba(255,255,255,0.01);
+    background-blend-mode: luminosity;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border: none;
+    box-shadow: inset 0 1px 1px rgba(255,255,255,0.1);
+    position: relative;
+    overflow: hidden;
+  }
+  .liquid-glass::before {
+    content: "";
+    position: absolute; inset: 0;
+    border-radius: inherit;
+    padding: 1.4px;
+    background: linear-gradient(180deg,
+      rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.15) 20%,
+      rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%,
+      rgba(255,255,255,0.15) 80%, rgba(255,255,255,0.45) 100%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  .liquid-glass-strong {
+    background: rgba(255,255,255,0.01);
+    background-blend-mode: luminosity;
+    backdrop-filter: blur(50px);
+    -webkit-backdrop-filter: blur(50px);
+    border: none;
+    box-shadow: 4px 4px 4px rgba(0,0,0,0.05), inset 0 1px 1px rgba(255,255,255,0.15);
+    position: relative;
+    overflow: hidden;
+  }
+  .liquid-glass-strong::before {
+    content: "";
+    position: absolute; inset: 0;
+    border-radius: inherit;
+    padding: 1.4px;
+    background: linear-gradient(180deg,
+      rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.2) 20%,
+      rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%,
+      rgba(255,255,255,0.2) 80%, rgba(255,255,255,0.5) 100%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  /* Horizontal scroll for collection */
+  .collection-scroll {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 8px;
+  }
+  .collection-scroll::-webkit-scrollbar { display: none; }
+
+  /* Marquee */
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  .marquee-track { animation: marquee 28s linear infinite; }
+  .marquee-track:hover { animation-play-state: paused; }
+
+  /* Accordion */
+  .accord-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.45s cubic-bezier(0.4,0,0.2,1);
+  }
+  .accord-body.open { max-height: 240px; }
+</style>
+</head>
+<body class="bg-black">
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useEffect, useRef, useCallback } = React;
+
+/* ── FadingVideo ─────────────────────────────────────────────────────────── */
+function FadingVideo({ src, className, style }) {
+  const videoRef = useRef(null);
+  const rafRef = useRef(null);
+  const fadingOutRef = useRef(false);
+  const FADE_MS = 500, FADE_OUT_LEAD = 0.55;
+
+  const fadeTo = useCallback((target, duration) => {
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    const video = videoRef.current; if (!video) return;
+    const start = performance.now();
+    const startOpacity = parseFloat(video.style.opacity) || 0;
+    function step(now) {
+      const progress = Math.min((now - start) / duration, 1);
+      video.style.opacity = startOpacity + (target - startOpacity) * progress;
+      if (progress < 1) rafRef.current = requestAnimationFrame(step);
+    }
+    rafRef.current = requestAnimationFrame(step);
+  }, []);
+
+  useEffect(() => {
+    const video = videoRef.current; if (!video) return;
+    video.style.opacity = 0;
+    const onLoadedData = () => { video.style.opacity = 0; video.play().catch(()=>{}); fadeTo(1, FADE_MS); };
+    const onTimeUpdate = () => {
+      if (!fadingOutRef.current && video.duration > 0) {
+        const remaining = video.duration - video.currentTime;
+        if (remaining <= FADE_OUT_LEAD && remaining > 0) { fadingOutRef.current = true; fadeTo(0, FADE_MS); }
+      }
+    };
+    const onEnded = () => {
+      video.style.opacity = 0;
+      setTimeout(() => { video.currentTime = 0; video.play().catch(()=>{}); fadingOutRef.current = false; fadeTo(1, FADE_MS); }, 100);
+    };
+    video.addEventListener("loadeddata", onLoadedData);
+    video.addEventListener("timeupdate", onTimeUpdate);
+    video.addEventListener("ended", onEnded);
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      video.removeEventListener("loadeddata", onLoadedData);
+      video.removeEventListener("timeupdate", onTimeUpdate);
+      video.removeEventListener("ended", onEnded);
+    };
+  }, [fadeTo]);
+
+  return <video ref={videoRef} src={src} autoPlay muted playsInline preload="auto" className={className} style={{ opacity: 0, ...style }} />;
+}
+
+/* ── Icons ───────────────────────────────────────────────────────────────── */
+const ArrowUpRight = ({ className="" }) => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M7 17L17 7"/><path d="M7 7h10v10"/>
+  </svg>
+);
+const PlayIcon = ({ className="" }) => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" className={className}>
+    <polygon points="6 4 20 12 6 20 6 4"/>
+  </svg>
+);
+const PlusIcon = ({ open }) => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5"
+    style={{ transition:"transform 0.3s", transform: open ? "rotate(45deg)" : "rotate(0deg)" }}>
+    <path d="M12 5v14M5 12h14"/>
+  </svg>
+);
+
+/* ── BlurText ────────────────────────────────────────────────────────────── */
+function BlurText({ text, className }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { amount: 0.1, once: true });
+  return (
+    <p ref={ref} style={{ display:"flex", flexWrap:"wrap", justifyContent:"center", rowGap:"0.1em" }} className={className}>
+      {text.split(" ").map((word, i) => (
+        <motion.span key={i}
+          initial={{ filter:"blur(10px)", opacity:0, y:50 }}
+          animate={isInView ? { filter:["blur(10px)","blur(5px)","blur(0px)"], opacity:[0,0.5,1], y:[50,-5,0] } : {}}
+          transition={{ duration:0.7, times:[0,0.5,1], ease:"easeOut", delay:(i*100)/1000 }}
+          style={{ display:"inline-block", marginRight:"0.28em" }}>
+          {word}
+        </motion.span>
+      ))}
+    </p>
+  );
+}
+
+/* ── FadeUp helper ───────────────────────────────────────────────────────── */
+function FadeUp({ children, delay=0, className="", style={} }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { amount: 0.15, once: true });
+  return (
+    <motion.div ref={ref} className={className} style={style}
+      initial={{ opacity:0, y:30, filter:"blur(6px)" }}
+      animate={isInView ? { opacity:1, y:0, filter:"blur(0px)" } : {}}
+      transition={{ duration:0.7, ease:"easeOut", delay }}>
+      {children}
+    </motion.div>
+  );
+}
+
+/* ── Navbar ──────────────────────────────────────────────────────────────── */
+function Navbar() {
+  const navLinks = ["Maison", "Collection", "Atelier", "Ritual", "Boutique"];
+  return (
+    <nav className="fixed top-4 left-0 right-0 z-50 flex items-center justify-between px-8 lg:px-16">
+      <div className="liquid-glass flex items-center justify-center" style={{ width:48, height:48, borderRadius:"50%" }}>
+        <span style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", fontSize:"1.4rem", color:"#fff" }}>æ</span>
+      </div>
+      <div className="hidden md:flex items-center gap-1 liquid-glass" style={{ borderRadius:9999, padding:"6px 6px" }}>
+        {navLinks.map(link => (
+          <button key={link} className="px-3 py-2 text-sm font-medium text-white/90 font-body bg-transparent border-none cursor-pointer" style={{ borderRadius:9999 }}>{link}</button>
+        ))}
+        <button className="flex items-center gap-1.5 whitespace-nowrap px-4 py-2 text-sm font-medium bg-white text-black cursor-pointer border-none" style={{ borderRadius:9999, fontFamily:"'Barlow',sans-serif" }}>
+          Discover Scents <ArrowUpRight />
+        </button>
+      </div>
+      <div style={{ width:48, height:48 }} />
+    </nav>
+  );
+}
+
+/* ── Hero ────────────────────────────────────────────────────────────────── */
+function HeroSection() {
+  const fadeUp = { filter:"blur(10px)", opacity:0, y:20 };
+  const fadeIn = { filter:"blur(0px)", opacity:1, y:0 };
+  return (
+    <section className="relative w-full min-h-screen bg-black overflow-hidden flex flex-col">
+      <FadingVideo
+        src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260418_080021_d598092b-c4c2-4e53-8e46-94cf9064cd50.mp4"
+        className="absolute left-1/2 top-0 -translate-x-1/2 object-cover object-top z-0"
+        style={{ width:"120%", height:"120%" }}
+      />
+      <div className="relative z-10 flex flex-col min-h-screen">
+        <Navbar />
+        <div className="flex-1 flex flex-col items-center justify-center pt-24 px-4">
+
+          <motion.div initial={fadeUp} animate={fadeIn} transition={{ duration:0.7, ease:"easeOut", delay:0.4 }}
+            className="liquid-glass flex items-center gap-2 mb-8" style={{ borderRadius:9999, padding:"6px 12px 6px 6px" }}>
+            <span className="bg-white text-black px-3 py-1 text-xs font-semibold font-body" style={{ borderRadius:9999 }}>New</span>
+            <span className="text-sm text-white/90 font-body pr-3">Édition Nocturne — Limited to 500 Flacons Worldwide</span>
+          </motion.div>
+
+          <BlurText text="Where Memory Becomes Fragrance"
+            className="text-6xl md:text-7xl lg:text-[5.5rem] font-heading italic text-white leading-[0.8] max-w-3xl justify-center tracking-[-4px]" />
+
+          <motion.p initial={fadeUp} animate={fadeIn} transition={{ duration:0.7, ease:"easeOut", delay:0.8 }}
+            className="mt-4 text-sm md:text-base text-white max-w-2xl font-body font-light leading-tight text-center">
+            Crafted in Grasse from ingredients gathered across six continents. Each flacon holds a world — a memory distilled into scent, sealed in hand-blown glass, worn once and never forgotten.
+          </motion.p>
+
+          <motion.div initial={fadeUp} animate={fadeIn} transition={{ duration:0.7, ease:"easeOut", delay:1.1 }}
+            className="flex items-center gap-6 mt-6">
+            <button className="liquid-glass-strong flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-white cursor-pointer border-none" style={{ borderRadius:9999, fontFamily:"'Barlow',sans-serif" }}>
+              Explore the Collection <ArrowUpRight />
+            </button>
+            <button className="flex items-center gap-2 text-white text-sm font-body font-medium bg-transparent border-none cursor-pointer">
+              Watch the Film <PlayIcon />
+            </button>
+          </motion.div>
+
+          <motion.div initial={fadeUp} animate={fadeIn} transition={{ duration:0.7, ease:"easeOut", delay:1.3 }}
+            className="flex items-stretch gap-4 mt-8">
+            {[
+              { icon:<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10"/><path d="M12 6v6l4 2"/><circle cx="18" cy="6" r="3" fill="white" fillOpacity="0.2"/></svg>, value:"1923", label:"Year the Maison Was Founded" },
+              { icon:<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>, value:"84+", label:"Rare Ingredients Per Composition" },
+            ].map((stat, i) => (
+              <div key={i} className="liquid-glass flex flex-col p-5" style={{ width:220, borderRadius:"1.25rem", minHeight:0 }}>
+                <div>{stat.icon}</div>
+                <div className="mt-auto">
+                  <p style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", fontSize:"2.25rem", color:"#fff", letterSpacing:"-1px", lineHeight:1 }}>{stat.value}</p>
+                  <p className="text-xs text-white font-body font-light mt-2">{stat.label}</p>
+                </div>
+              </div>
+            ))}
+          </motion.div>
+        </div>
+
+        <motion.div initial={fadeUp} animate={fadeIn} transition={{ duration:0.7, ease:"easeOut", delay:1.4 }}
+          className="flex flex-col items-center gap-4 pb-8">
+          <div className="liquid-glass px-3.5 py-1 text-xs font-medium text-white font-body" style={{ borderRadius:9999 }}>
+            Stocked at the world's most distinguished perfumeries
+          </div>
+          <div className="flex items-center gap-12 md:gap-16">
+            {["Bergdorf", "Harrods", "Le Bon Marché", "Isetan", "Rinascente"].map((name, i) => (
+              <span key={i} style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", fontSize:"1.875rem", color:"#fff", letterSpacing:"-0.025em" }}>{name}</span>
+            ))}
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+/* ── Marquee Strip ───────────────────────────────────────────────────────── */
+function MarqueeStrip() {
+  const items = ["Oud & Amber","Rose Absolue","Vetiver Sombre","Iris Poudré","Santal Blanc","Encens Sauvage","Jasmin de Nuit","Musc Céleste"];
+  const doubled = [...items, ...items];
+  return (
+    <div style={{ background:"#000", borderTop:"1px solid rgba(255,255,255,0.08)", borderBottom:"1px solid rgba(255,255,255,0.08)", padding:"14px 0", overflow:"hidden" }}>
+      <div className="marquee-track" style={{ display:"flex", gap:48, width:"max-content" }}>
+        {doubled.map((item, i) => (
+          <span key={i} style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", fontSize:"1.1rem", color:"rgba(255,255,255,0.5)", whiteSpace:"nowrap", letterSpacing:"-0.02em" }}>
+            {item} <span style={{ color:"rgba(255,255,255,0.2)", fontSize:"0.7rem", verticalAlign:"middle" }}>◆</span>
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ── Collection Section ──────────────────────────────────────────────────── */
+function CollectionSection() {
+  const fragrances = [
+    { name:"Nuit Éternelle", family:"Oriental Woody", accord:"Oud · Amber · Sandalwood", intensity:"Extrait de Parfum", price:"€420", tags:["Bestseller","Unisex","Evening"] },
+    { name:"Brume d'Aube", family:"Floral Chypre", accord:"Iris · Violet · Vetiver", intensity:"Eau de Parfum", price:"€310", tags:["New","Daytime","Feminine"] },
+    { name:"Sel Marin", family:"Aquatic Fougère", accord:"Sea Salt · Ambergris · Driftwood", intensity:"Eau de Parfum", price:"€290", tags:["Summer","Unisex"] },
+    { name:"Encens Royal", family:"Aromatic Resinous", accord:"Frankincense · Myrrh · Labdanum", intensity:"Extrait de Parfum", price:"€510", tags:["Limited","Masculine","Evening"] },
+    { name:"Jardin Perdu", family:"Green Floral", accord:"Peony · Moss · White Musk", intensity:"Eau de Toilette", price:"€240", tags:["Daytime","Feminine"] },
+  ];
+
+  return (
+    <section style={{ background:"#000", padding:"120px 0 80px" }}>
+      <div style={{ padding:"0 2rem 0 5rem" }}>
+        <FadeUp delay={0}>
+          <p style={{ fontSize:14, fontFamily:"'Barlow',sans-serif", color:"rgba(255,255,255,0.6)", marginBottom:16, letterSpacing:"0.08em", textTransform:"uppercase" }}>// La Collection</p>
+          <div style={{ display:"flex", alignItems:"flex-end", justifyContent:"space-between", marginBottom:48, paddingRight:"3rem" }}>
+            <h2 style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", color:"#fff", fontSize:"clamp(3rem,7vw,5.5rem)", lineHeight:0.88, letterSpacing:"-3px" }}>
+              Twelve Scents,<br/>One Obsession
+            </h2>
+            <button className="liquid-glass flex items-center gap-2" style={{ borderRadius:9999, padding:"10px 20px", fontSize:13, fontFamily:"'Barlow',sans-serif", color:"#fff", border:"none", cursor:"pointer", whiteSpace:"nowrap" }}>
+              View Full Collection <ArrowUpRight />
+            </button>
+          </div>
+        </FadeUp>
+
+        <div className="collection-scroll">
+          {fragrances.map((f, i) => (
+            <FadeUp key={i} delay={i * 0.08} style={{ flexShrink:0, width:280 }}>
+              <div className="liquid-glass" style={{ borderRadius:"1.25rem", padding:24, minHeight:380, display:"flex", flexDirection:"column" }}>
+                {/* Faux bottle visual */}
+                <div style={{ flex:1, display:"flex", alignItems:"center", justifyContent:"center", marginBottom:20 }}>
+                  <div style={{ width:72, height:110, borderRadius:"8px 8px 4px 4px", background:"linear-gradient(160deg,rgba(255,255,255,0.12),rgba(255,255,255,0.03))", boxShadow:"inset 0 1px 1px rgba(255,255,255,0.2), 0 8px 32px rgba(0,0,0,0.4)", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"flex-end", paddingBottom:8, position:"relative" }}>
+                    <div style={{ width:20, height:16, borderRadius:"4px 4px 0 0", background:"rgba(255,255,255,0.08)", position:"absolute", top:-14 }} />
+                    <span style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", fontSize:9, color:"rgba(255,255,255,0.5)", textAlign:"center", lineHeight:1.2 }}>{f.name}</span>
+                  </div>
+                </div>
+
+                <div style={{ display:"flex", gap:4, flexWrap:"wrap", marginBottom:12 }}>
+                  {f.tags.map((t,j) => (
+                    <span key={j} className="liquid-glass" style={{ borderRadius:9999, padding:"3px 10px", fontSize:10, color:"rgba(255,255,255,0.8)", fontFamily:"'Barlow',sans-serif" }}>{t}</span>
+                  ))}
+                </div>
+
+                <h3 style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", color:"#fff", fontSize:"1.5rem", letterSpacing:"-0.5px", lineHeight:1 }}>{f.name}</h3>
+                <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:11, color:"rgba(255,255,255,0.5)", marginTop:4, letterSpacing:"0.06em", textTransform:"uppercase" }}>{f.family}</p>
+                <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:12, color:"rgba(255,255,255,0.7)", marginTop:8, lineHeight:1.5 }}>{f.accord}</p>
+
+                <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginTop:16, paddingTop:14, borderTop:"1px solid rgba(255,255,255,0.08)" }}>
+                  <span style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", fontSize:"1.25rem", color:"#fff" }}>{f.price}</span>
+                  <button className="liquid-glass-strong" style={{ borderRadius:9999, padding:"7px 16px", fontSize:12, fontFamily:"'Barlow',sans-serif", color:"#fff", border:"none", cursor:"pointer" }}>Add to Ritual</button>
+                </div>
+              </div>
+            </FadeUp>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── Capabilities / Atelier Section ─────────────────────────────────────── */
+function AtelierSection() {
+  const cards = [
+    {
+      icon: <svg viewBox="0 0 24 24" fill="currentColor" width="24" height="24" style={{ color:"white" }}><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9zm0 16c-3.86 0-7-3.14-7-7s3.14-7 7-7 7 3.14 7 7-3.14 7-7 7zm-1-11h2v6h-2zm0 8h2v2h-2z"/></svg>,
+      tags: ["Grasse Origin", "Hand-Harvested", "Single Terroir", "Certified Pure"],
+      title: "Rare Ingredients",
+      body: "We source only the finest raw materials — Bulgarian rose at dawn, Mysore sandalwood aged two decades, Haitian vetiver hand-distilled in copper alembics.",
+    },
+    {
+      icon: <svg viewBox="0 0 24 24" fill="currentColor" width="24" height="24" style={{ color:"white" }}><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/></svg>,
+      tags: ["Master Noses", "100+ Iterations", "Aged 18 Months", "Signature Drydown"],
+      title: "The Composition",
+      body: "Our master perfumers spend up to three years crafting a single scent — layering top, heart, and base notes until the composition breathes with a life of its own.",
+    },
+    {
+      icon: <svg viewBox="0 0 24 24" fill="currentColor" width="24" height="24" style={{ color:"white" }}><path d="M17 8C8 10 5.9 16.17 3.82 19H5c.44-.68.87-1.35 1.31-2H7c-.69 1.19-1.2 2-2 2H4a1 1 0 010-2c1.24-2.03 3.32-8.18 13-10V8zM8 5c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm11 3c0 4.97-4.03 9-9 9a9 9 0 01-.9-.05C10.94 16.36 12 15.32 12 14c0-2.21-2.24-4-5-4v-1.38C9.1 8.23 11.43 8 14 8c2.76 0 5 2.24 5 5v-5z"/></svg>,
+      tags: ["Hand-Blown Glass", "Gold Leaf Detail", "Bespoke Engraving", "Silk Lining"],
+      title: "The Flacon",
+      body: "Each bottle is a sculpture. Mouth-blown by Venetian glass artisans, stoppered in solid crystal, and sealed with 18-karat gold thread — the vessel honours what it holds.",
+    },
+  ];
+
+  return (
+    <section className="relative w-full min-h-screen bg-black overflow-hidden">
+      <FadingVideo
+        src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260418_094631_d30ab262-45ee-4b7d-99f3-5d5848c8ef13.mp4"
+        className="absolute inset-0 w-full h-full object-cover z-0"
+        style={{}}
+      />
+      <div className="relative z-10 px-8 md:px-16 lg:px-20 pt-24 pb-10 flex flex-col min-h-screen">
+        <div className="mb-auto">
+          <p className="text-sm font-body mb-6" style={{ color:"rgba(255,255,255,0.7)", letterSpacing:"0.08em", textTransform:"uppercase" }}>// L'Atelier</p>
+          <h2 style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", color:"#fff", fontSize:"clamp(3.5rem,8vw,6rem)", lineHeight:0.9, letterSpacing:"-3px" }}>
+            Perfumery<br/>perfected
+          </h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16">
+          {cards.map((card, i) => (
+            <div key={i} className="liquid-glass flex flex-col p-6" style={{ borderRadius:"1.25rem", minHeight:360 }}>
+              <div className="flex items-start justify-between gap-4">
+                <div className="liquid-glass flex items-center justify-center flex-shrink-0" style={{ width:44, height:44, borderRadius:"0.75rem" }}>
+                  {card.icon}
+                </div>
+                <div className="flex flex-wrap justify-end gap-1.5" style={{ maxWidth:"70%" }}>
+                  {card.tags.map((tag, j) => (
+                    <span key={j} className="liquid-glass px-3 py-1 font-body whitespace-nowrap" style={{ borderRadius:9999, fontSize:11, color:"rgba(255,255,255,0.9)" }}>{tag}</span>
+                  ))}
+                </div>
+              </div>
+              <div className="flex-1" />
+              <div className="mt-6">
+                <h3 style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", color:"#fff", fontSize:"clamp(1.75rem,3vw,2.25rem)", letterSpacing:"-1px", lineHeight:1 }}>{card.title}</h3>
+                <p className="mt-3 text-sm font-body font-light leading-snug" style={{ maxWidth:"32ch", color:"rgba(255,255,255,0.9)" }}>{card.body}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── Ritual / Process Section ────────────────────────────────────────────── */
+function RitualSection() {
+  const steps = [
+    { num:"01", title:"The Consultation", body:"Begin with a private olfactory consultation — in-boutique or via our digital profiling. Our advisors map your scent memory, skin chemistry, and desired emotional resonance." },
+    { num:"02", title:"The Maceration", body:"Chosen accords are blended and left to macerate for a minimum of six weeks. Time deepens the bond between molecules, allowing the fragrance to reveal its true character." },
+    { num:"03", title:"The Maturation", body:"Blends rest in glass vessels at controlled temperature. Our noses revisit the composition weekly, adjusting ratios until the scent reaches its final, irreducible expression." },
+    { num:"04", title:"The Bottling", body:"Each flacon is filled by hand, stoppered, sealed with wax, and placed in its cedar presentation case. Your name, if requested, is engraved by our in-house calligrapher." },
+  ];
+
+  return (
+    <section style={{ background:"#000", padding:"120px 5rem 120px" }}>
+      <div style={{ maxWidth:1200, margin:"0 auto" }}>
+        <FadeUp>
+          <p style={{ fontSize:14, fontFamily:"'Barlow',sans-serif", color:"rgba(255,255,255,0.6)", marginBottom:16, letterSpacing:"0.08em", textTransform:"uppercase" }}>// Le Rituel</p>
+          <h2 style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", color:"#fff", fontSize:"clamp(3rem,6vw,5rem)", lineHeight:0.9, letterSpacing:"-3px", marginBottom:80 }}>
+            From raw essence<br/>to living scent
+          </h2>
+        </FadeUp>
+
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:"3px", background:"rgba(255,255,255,0.06)" }}>
+          {steps.map((step, i) => (
+            <FadeUp key={i} delay={i * 0.1}>
+              <div style={{ background:"#000", padding:48, minHeight:280 }}>
+                <span style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", fontSize:"4rem", color:"rgba(255,255,255,0.08)", lineHeight:1, display:"block", marginBottom:24 }}>{step.num}</span>
+                <h3 style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", color:"#fff", fontSize:"1.75rem", letterSpacing:"-0.5px", lineHeight:1, marginBottom:16 }}>{step.title}</h3>
+                <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:14, color:"rgba(255,255,255,0.65)", lineHeight:1.7, maxWidth:"38ch", fontWeight:300 }}>{step.body}</p>
+              </div>
+            </FadeUp>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── Testimonials ────────────────────────────────────────────────────────── */
+function TestimonialsSection() {
+  const testimonials = [
+    { quote:"Nuit Éternelle is the only scent I've worn for three years. It becomes something entirely different on my skin — warm, magnetic, completely mine.", author:"Isabelle V.", location:"Paris" },
+    { quote:"The consultation was unlike any perfume experience I've had. They understood what I wanted before I could articulate it myself.", author:"James O.", location:"London" },
+    { quote:"The flacon alone is a work of art. I've placed it on my vanity like a sculpture. The scent inside is even more extraordinary.", author:"Yuki M.", location:"Tokyo" },
+  ];
+  const [active, setActive] = useState(0);
+
+  return (
+    <section style={{ background:"#000", padding:"100px 5rem", borderTop:"1px solid rgba(255,255,255,0.06)" }}>
+      <FadeUp>
+        <p style={{ fontSize:14, fontFamily:"'Barlow',sans-serif", color:"rgba(255,255,255,0.6)", marginBottom:16, letterSpacing:"0.08em", textTransform:"uppercase" }}>// Testimonials</p>
+        <h2 style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", color:"#fff", fontSize:"clamp(2.5rem,5vw,4rem)", lineHeight:0.9, letterSpacing:"-2px", marginBottom:64 }}>
+          Worn and remembered
+        </h2>
+      </FadeUp>
+
+      <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:24 }}>
+        {testimonials.map((t, i) => (
+          <FadeUp key={i} delay={i * 0.1}>
+            <div className="liquid-glass" style={{ borderRadius:"1.25rem", padding:32, minHeight:220, display:"flex", flexDirection:"column", justifyContent:"space-between" }}>
+              <p style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", fontSize:"1.15rem", color:"rgba(255,255,255,0.9)", lineHeight:1.6, letterSpacing:"-0.3px" }}>"{t.quote}"</p>
+              <div style={{ marginTop:24, paddingTop:20, borderTop:"1px solid rgba(255,255,255,0.08)" }}>
+                <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:13, color:"#fff", fontWeight:500 }}>{t.author}</p>
+                <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:12, color:"rgba(255,255,255,0.45)", marginTop:2 }}>{t.location}</p>
+              </div>
+            </div>
+          </FadeUp>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ── FAQ / Accordion ─────────────────────────────────────────────────────── */
+function FAQSection() {
+  const faqs = [
+    { q:"What makes AEON fragrances different from department store perfumes?", a:"Every AEON composition uses raw materials of exceptional quality — often organically certified, wild-harvested, or sourced from single-origin suppliers we've partnered with for decades. We use no synthetic shortcuts; our Extrait de Parfum concentrations begin at 30% aromatic compound." },
+    { q:"Do you offer bespoke or personalised fragrances?", a:"Yes. Our Maison Privée service creates fully bespoke fragrances for individuals and maisons. The process takes between six and twelve months and begins with a private consultation in Paris, New York, or via secure video appointment." },
+    { q:"How should I store my flacon to preserve the fragrance?", a:"Keep the flacon away from direct sunlight, heat sources, and humidity. A cool, dark drawer or cabinet is ideal. Properly stored, an AEON Extrait de Parfum will retain its character for ten years or more." },
+    { q:"What is your sustainability commitment?", a:"We use recycled glass in secondary packaging, partner exclusively with suppliers holding Rainforest Alliance or Fair Trade certification, and have been carbon-neutral in our Grasse atelier since 2019. Our shipping materials are fully compostable." },
+  ];
+  const [open, setOpen] = useState(null);
+
+  return (
+    <section style={{ background:"#000", padding:"80px 5rem 120px", borderTop:"1px solid rgba(255,255,255,0.06)" }}>
+      <div style={{ maxWidth:800 }}>
+        <FadeUp>
+          <p style={{ fontSize:14, fontFamily:"'Barlow',sans-serif", color:"rgba(255,255,255,0.6)", marginBottom:16, letterSpacing:"0.08em", textTransform:"uppercase" }}>// Questions</p>
+          <h2 style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", color:"#fff", fontSize:"clamp(2.5rem,5vw,4rem)", lineHeight:0.9, letterSpacing:"-2px", marginBottom:56 }}>
+            The curious ask
+          </h2>
+        </FadeUp>
+        {faqs.map((faq, i) => (
+          <FadeUp key={i} delay={i * 0.08}>
+            <div style={{ borderBottom:"1px solid rgba(255,255,255,0.08)" }}>
+              <button onClick={() => setOpen(open === i ? null : i)}
+                style={{ width:"100%", display:"flex", alignItems:"center", justifyContent:"space-between", padding:"22px 0", background:"none", border:"none", cursor:"pointer", textAlign:"left" }}>
+                <span style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", fontSize:"1.25rem", color:"#fff", letterSpacing:"-0.3px", paddingRight:24 }}>{faq.q}</span>
+                <PlusIcon open={open === i} />
+              </button>
+              <div className={`accord-body${open === i ? " open" : ""}`}>
+                <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:14, color:"rgba(255,255,255,0.65)", lineHeight:1.75, fontWeight:300, paddingBottom:22, maxWidth:"60ch" }}>{faq.a}</p>
+              </div>
+            </div>
+          </FadeUp>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ── CTA Banner ──────────────────────────────────────────────────────────── */
+function CTABanner() {
+  return (
+    <section style={{ background:"#000", padding:"0 5rem 120px" }}>
+      <FadeUp>
+        <div className="liquid-glass" style={{ borderRadius:"1.5rem", padding:"80px 64px", display:"flex", alignItems:"center", justifyContent:"space-between", gap:48, flexWrap:"wrap" }}>
+          <div>
+            <p style={{ fontSize:13, fontFamily:"'Barlow',sans-serif", color:"rgba(255,255,255,0.5)", marginBottom:12, letterSpacing:"0.08em", textTransform:"uppercase" }}>Private Consultation</p>
+            <h2 style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", color:"#fff", fontSize:"clamp(2rem,4vw,3.25rem)", lineHeight:0.95, letterSpacing:"-2px" }}>
+              Your signature scent<br/>awaits discovery
+            </h2>
+          </div>
+          <div style={{ display:"flex", gap:16, flexWrap:"wrap" }}>
+            <button className="liquid-glass-strong" style={{ borderRadius:9999, padding:"12px 28px", fontSize:14, fontFamily:"'Barlow',sans-serif", color:"#fff", border:"none", cursor:"pointer", display:"flex", alignItems:"center", gap:8 }}>
+              Book a Consultation <ArrowUpRight />
+            </button>
+            <button className="liquid-glass" style={{ borderRadius:9999, padding:"12px 28px", fontSize:14, fontFamily:"'Barlow',sans-serif", color:"rgba(255,255,255,0.85)", border:"none", cursor:"pointer" }}>
+              Request Samples
+            </button>
+          </div>
+        </div>
+      </FadeUp>
+    </section>
+  );
+}
+
+/* ── Footer ──────────────────────────────────────────────────────────────── */
+function Footer() {
+  const cols = [
+    { heading:"Maison", links:["Our Story","The Perfumers","Atelier Grasse","Press & Awards","Careers"] },
+    { heading:"Collection", links:["Extrait de Parfum","Eau de Parfum","Coffrets","Limited Editions","Discovery Sets"] },
+    { heading:"Services", links:["Bespoke Fragrance","Private Consultation","Gift Engraving","Corporate Gifting","Fragrance Wardrobe"] },
+    { heading:"Contact", links:["Paris Boutique","London Boutique","New York Boutique","Client Services","Wholesale Enquiries"] },
+  ];
+
+  return (
+    <footer style={{ background:"#000", borderTop:"1px solid rgba(255,255,255,0.08)", padding:"80px 5rem 40px" }}>
+      <div style={{ display:"grid", gridTemplateColumns:"2fr 1fr 1fr 1fr 1fr", gap:48, marginBottom:80 }}>
+        {/* Brand column */}
+        <div>
+          <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:24 }}>
+            <div className="liquid-glass" style={{ width:42, height:42, borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center" }}>
+              <span style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", fontSize:"1.25rem", color:"#fff" }}>æ</span>
+            </div>
+            <span style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", fontSize:"1.5rem", color:"#fff", letterSpacing:"-1px" }}>AEON</span>
+          </div>
+          <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:13, color:"rgba(255,255,255,0.45)", lineHeight:1.75, fontWeight:300, maxWidth:"28ch" }}>
+            Haute parfumerie founded in Paris, 1923. Crafted with obsession. Worn with intention.
+          </p>
+          <div style={{ display:"flex", gap:10, marginTop:24 }}>
+            {["IG","TW","FB","PT"].map((s,i) => (
+              <div key={i} className="liquid-glass" style={{ width:34, height:34, borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer" }}>
+                <span style={{ fontFamily:"'Barlow',sans-serif", fontSize:10, color:"rgba(255,255,255,0.7)", fontWeight:500 }}>{s}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {cols.map((col, i) => (
+          <div key={i}>
+            <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:11, color:"rgba(255,255,255,0.4)", letterSpacing:"0.1em", textTransform:"uppercase", marginBottom:20 }}>{col.heading}</p>
+            {col.links.map((link, j) => (
+              <p key={j} style={{ fontFamily:"'Barlow',sans-serif", fontSize:13, color:"rgba(255,255,255,0.65)", marginBottom:10, cursor:"pointer", fontWeight:300, lineHeight:1.4 }}
+                onMouseEnter={e => e.target.style.color="#fff"} onMouseLeave={e => e.target.style.color="rgba(255,255,255,0.65)"}>
+                {link}
+              </p>
+            ))}
+          </div>
+        ))}
+      </div>
+
+      <div style={{ borderTop:"1px solid rgba(255,255,255,0.06)", paddingTop:32, display:"flex", alignItems:"center", justifyContent:"space-between" }}>
+        <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:12, color:"rgba(255,255,255,0.3)", fontWeight:300 }}>© 2025 Maison AEON. All rights reserved. Paris · London · New York · Tokyo.</p>
+        <div style={{ display:"flex", gap:24 }}>
+          {["Privacy Policy","Terms of Use","Cookie Preferences"].map((l,i) => (
+            <span key={i} style={{ fontFamily:"'Barlow',sans-serif", fontSize:12, color:"rgba(255,255,255,0.3)", cursor:"pointer" }}>{l}</span>
+          ))}
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+/* ── App ─────────────────────────────────────────────────────────────────── */
+function App() {
+  useEffect(() => {
+    const orig = console.error;
+    console.error = (...args) => {
+      if (typeof args[0] === "string" && args[0].includes("Each child in a list")) return;
+      orig(...args);
+    };
+    return () => { console.error = orig; };
+  }, []);
+
+  return (
+    <div style={{ background:"#000" }}>
+      <HeroSection />
+      <MarqueeStrip />
+      <CollectionSection />
+      <AtelierSection />
+      <RitualSection />
+      <TestimonialsSection />
+      <FAQSection />
+      <CTABanner />
+      <Footer />
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
