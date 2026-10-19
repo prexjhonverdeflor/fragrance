@@ -33,6 +33,7 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
   html, body { background: #000; min-height: 100vh; }
+  body { overflow-x: hidden; }
 
   .liquid-glass {
     background: rgba(255,255,255,0.01);
@@ -109,7 +110,87 @@
     overflow: hidden;
     transition: max-height 0.45s cubic-bezier(0.4,0,0.2,1);
   }
-  .accord-body.open { max-height: 240px; }
+  .accord-body.open { max-height: 600px; }
+
+  /* ── Responsive utilities ─────────────────────────────────────────────── */
+  .title-esp   { letter-spacing: -1.5px; }
+  .title-esp-2 { letter-spacing: -1px; }
+  @media (min-width: 768px) {
+    .title-esp   { letter-spacing: -3px; }
+    .title-esp-2 { letter-spacing: -2px; }
+  }
+
+  .sec-ritual { padding: 72px 1.25rem; }
+  .sec-collection { padding: 80px 0 60px; }
+  .sec-testi  { padding: 72px 1.25rem; border-top: 1px solid rgba(255,255,255,0.06); }
+  .sec-faq    { padding: 64px 1.25rem 96px; border-top: 1px solid rgba(255,255,255,0.06); }
+  .sec-cta    { padding: 0 1.25rem 80px; }
+  .sec-footer { background: #000; border-top: 1px solid rgba(255,255,255,0.08); padding: 64px 1.25rem 32px; }
+  @media (min-width: 768px) {
+    .sec-ritual { padding: 120px 5rem; }
+    .sec-collection { padding: 120px 0 80px; }
+    .sec-testi  { padding: 100px 5rem; }
+    .sec-faq    { padding: 80px 5rem 120px; }
+    .sec-cta    { padding: 0 5rem 120px; }
+    .sec-footer { padding: 80px 5rem 40px; }
+  }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr; gap: 3px; background: rgba(255,255,255,0.06); }
+  @media (min-width: 768px) { .grid-2 { grid-template-columns: repeat(2,1fr); } }
+
+  .grid-3 { display: grid; grid-template-columns: 1fr; gap: 24px; }
+  @media (min-width: 900px) { .grid-3 { grid-template-columns: repeat(3,1fr); } }
+
+  .grid-footer { display: grid; grid-template-columns: 1fr; gap: 40px; margin-bottom: 56px; }
+  @media (min-width: 640px)  { .grid-footer { grid-template-columns: repeat(2,1fr); } }
+  @media (min-width: 1024px) { .grid-footer { grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 80px; } }
+
+  .step-card { background: #000; padding: 32px 24px; }
+  @media (min-width: 768px) { .step-card { padding: 48px; min-height: 280px; } }
+
+  .cta-card { padding: 48px 24px; }
+  @media (min-width: 768px) { .cta-card { padding: 80px 64px; } }
+
+  .stat-row { display: flex; flex-direction: column; gap: 16px; margin-top: 32px; width: 100%; max-width: 480px; }
+  .stat-card { width: 100%; }
+  @media (min-width: 640px) {
+    .stat-row { flex-direction: row; align-items: stretch; width: auto; max-width: none; }
+    .stat-card { width: 220px; }
+  }
+
+  /* ── Ambient decor for dark sections ──────────────────────────────────── */
+  .ambient { position: relative; overflow: hidden; isolation: isolate; }
+  .ambient::before {
+    content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background:
+      radial-gradient(720px 360px at 8% -10%, rgba(255,255,255,0.075), transparent 65%),
+      radial-gradient(640px 420px at 94% 112%, rgba(255,255,255,0.055), transparent 65%);
+  }
+  .grain::after {
+    content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+  }
+  .watermark {
+    position: absolute; left: 50%; top: 46%; transform: translate(-50%,-50%); z-index: -1;
+    font-family: 'Instrument Serif', serif; font-style: italic;
+    font-size: clamp(7rem, 24vw, 21rem); line-height: 1; white-space: nowrap;
+    color: rgba(255,255,255,0.035); pointer-events: none; user-select: none;
+  }
+  .hairline { height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); }
+  .stars { font-size: 12px; letter-spacing: 3px; color: rgba(255,255,255,0.85); }
+  .step-card { box-shadow: inset 0 1px 0 rgba(255,255,255,0.07); }
+
+  .faq-grid { display: grid; grid-template-columns: 1fr; gap: 40px; }
+  @media (min-width: 768px) { .faq-grid { grid-template-columns: 0.85fr 1.15fr; gap: 48px; } }
+  @media (min-width: 1024px) { .faq-grid { gap: 64px; } }
+
+  .news-input {
+    flex: 1; min-width: 0; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 9999px; padding: 10px 16px; color: #fff; outline: none;
+    font-family: 'Barlow', sans-serif; font-size: 13px;
+  }
+  .news-input::placeholder { color: rgba(255,255,255,0.35); }
+  .news-input:focus { border-color: rgba(255,255,255,0.4); }
 </style>
 </head>
 <body class="bg-black">
@@ -219,9 +300,10 @@ function FadeUp({ children, delay=0, className="", style={} }) {
 
 /* ── Navbar ──────────────────────────────────────────────────────────────── */
 function Navbar() {
+  const [open, setOpen] = useState(false);
   const navLinks = ["Maison", "Collection", "Atelier", "Ritual", "Boutique"];
   return (
-    <nav className="fixed top-4 left-0 right-0 z-50 flex items-center justify-between px-8 lg:px-16">
+    <nav className="fixed top-4 left-0 right-0 z-50 flex items-center justify-between px-4 md:px-8 lg:px-16">
       <div className="liquid-glass flex items-center justify-center" style={{ width:48, height:48, borderRadius:"50%" }}>
         <span style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", fontSize:"1.4rem", color:"#fff" }}>æ</span>
       </div>
@@ -233,7 +315,29 @@ function Navbar() {
           Discover Scents <ArrowUpRight />
         </button>
       </div>
-      <div style={{ width:48, height:48 }} />
+      <div className="hidden md:block" style={{ width:48, height:48 }} />
+      <button onClick={() => setOpen(o => !o)} aria-label="Menu" aria-expanded={open}
+        className="md:hidden liquid-glass flex items-center justify-center cursor-pointer border-none"
+        style={{ width:48, height:48, borderRadius:"50%" }}>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round"
+          style={{ transition:"transform 0.3s", transform: open ? "rotate(90deg)" : "none" }}>
+          {open ? <><path d="M6 6l12 12"/><path d="M18 6L6 18"/></> : <><path d="M4 8h16"/><path d="M4 16h16"/></>}
+        </svg>
+      </button>
+      {open && (
+        <div className="md:hidden absolute top-14 left-4 right-4 liquid-glass-strong flex flex-col gap-1 p-3" style={{ borderRadius:"1.25rem" }}>
+          {navLinks.map(link => (
+            <button key={link} onClick={() => setOpen(false)}
+              className="px-4 py-3 text-sm font-medium text-white/90 font-body bg-transparent border-none cursor-pointer text-left"
+              style={{ borderRadius:9999 }}>{link}</button>
+          ))}
+          <button onClick={() => setOpen(false)}
+            className="flex items-center justify-center gap-1.5 whitespace-nowrap px-4 py-3 text-sm font-medium bg-white text-black cursor-pointer border-none"
+            style={{ borderRadius:9999, fontFamily:"'Barlow',sans-serif" }}>
+            Discover Scents <ArrowUpRight />
+          </button>
+        </div>
+      )}
     </nav>
   );
 }
@@ -254,13 +358,13 @@ function HeroSection() {
         <div className="flex-1 flex flex-col items-center justify-center pt-24 px-4">
 
           <motion.div initial={fadeUp} animate={fadeIn} transition={{ duration:0.7, ease:"easeOut", delay:0.4 }}
-            className="liquid-glass flex items-center gap-2 mb-8" style={{ borderRadius:9999, padding:"6px 12px 6px 6px" }}>
+            className="liquid-glass flex flex-wrap items-center justify-center gap-2 mb-8 text-center" style={{ borderRadius:9999, padding:"6px 12px 6px 6px", maxWidth:"100%" }}>
             <span className="bg-white text-black px-3 py-1 text-xs font-semibold font-body" style={{ borderRadius:9999 }}>New</span>
             <span className="text-sm text-white/90 font-body pr-3">Édition Nocturne — Limited to 500 Flacons Worldwide</span>
           </motion.div>
 
           <BlurText text="Where Memory Becomes Fragrance"
-            className="text-6xl md:text-7xl lg:text-[5.5rem] font-heading italic text-white leading-[0.8] max-w-3xl justify-center tracking-[-4px]" />
+            className="text-[2.75rem] sm:text-6xl md:text-7xl lg:text-[5.5rem] font-heading italic text-white leading-[0.8] max-w-3xl justify-center tracking-[-2px] sm:tracking-[-3px] lg:tracking-[-4px] px-2" />
 
           <motion.p initial={fadeUp} animate={fadeIn} transition={{ duration:0.7, ease:"easeOut", delay:0.8 }}
             className="mt-4 text-sm md:text-base text-white max-w-2xl font-body font-light leading-tight text-center">
@@ -268,7 +372,7 @@ function HeroSection() {
           </motion.p>
 
           <motion.div initial={fadeUp} animate={fadeIn} transition={{ duration:0.7, ease:"easeOut", delay:1.1 }}
-            className="flex items-center gap-6 mt-6">
+            className="flex flex-wrap items-center justify-center gap-6 mt-6 px-2">
             <button className="liquid-glass-strong flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-white cursor-pointer border-none" style={{ borderRadius:9999, fontFamily:"'Barlow',sans-serif" }}>
               Explore the Collection <ArrowUpRight />
             </button>
@@ -278,12 +382,12 @@ function HeroSection() {
           </motion.div>
 
           <motion.div initial={fadeUp} animate={fadeIn} transition={{ duration:0.7, ease:"easeOut", delay:1.3 }}
-            className="flex items-stretch gap-4 mt-8">
+            className="stat-row">
             {[
               { icon:<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10"/><path d="M12 6v6l4 2"/><circle cx="18" cy="6" r="3" fill="white" fillOpacity="0.2"/></svg>, value:"1923", label:"Year the Maison Was Founded" },
               { icon:<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>, value:"84+", label:"Rare Ingredients Per Composition" },
             ].map((stat, i) => (
-              <div key={i} className="liquid-glass flex flex-col p-5" style={{ width:220, borderRadius:"1.25rem", minHeight:0 }}>
+              <div key={i} className="liquid-glass stat-card flex flex-col p-5" style={{ borderRadius:"1.25rem", minHeight:0 }}>
                 <div>{stat.icon}</div>
                 <div className="mt-auto">
                   <p style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", fontSize:"2.25rem", color:"#fff", letterSpacing:"-1px", lineHeight:1 }}>{stat.value}</p>
@@ -295,11 +399,11 @@ function HeroSection() {
         </div>
 
         <motion.div initial={fadeUp} animate={fadeIn} transition={{ duration:0.7, ease:"easeOut", delay:1.4 }}
-          className="flex flex-col items-center gap-4 pb-8">
-          <div className="liquid-glass px-3.5 py-1 text-xs font-medium text-white font-body" style={{ borderRadius:9999 }}>
+          className="flex flex-col items-center gap-4 pb-8 px-4">
+          <div className="liquid-glass px-3.5 py-1 text-xs font-medium text-white font-body text-center" style={{ borderRadius:9999 }}>
             Stocked at the world's most distinguished perfumeries
           </div>
-          <div className="flex items-center gap-12 md:gap-16">
+          <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 md:gap-x-16">
             {["Bergdorf", "Harrods", "Le Bon Marché", "Isetan", "Rinascente"].map((name, i) => (
               <span key={i} style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", fontSize:"1.875rem", color:"#fff", letterSpacing:"-0.025em" }}>{name}</span>
             ))}
@@ -316,7 +420,7 @@ function MarqueeStrip() {
   const doubled = [...items, ...items];
   return (
     <div style={{ background:"#000", borderTop:"1px solid rgba(255,255,255,0.08)", borderBottom:"1px solid rgba(255,255,255,0.08)", padding:"14px 0", overflow:"hidden" }}>
-      <div className="marquee-track" style={{ display:"flex", gap:48, width:"max-content" }}>
+      <div className="marquee-track flex gap-8 md:gap-12" style={{ width:"max-content" }}>
         {doubled.map((item, i) => (
           <span key={i} style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", fontSize:"1.1rem", color:"rgba(255,255,255,0.5)", whiteSpace:"nowrap", letterSpacing:"-0.02em" }}>
             {item} <span style={{ color:"rgba(255,255,255,0.2)", fontSize:"0.7rem", verticalAlign:"middle" }}>◆</span>
@@ -338,12 +442,12 @@ function CollectionSection() {
   ];
 
   return (
-    <section style={{ background:"#000", padding:"120px 0 80px" }}>
-      <div style={{ padding:"0 2rem 0 5rem" }}>
+    <section className="sec-collection" style={{ background:"#000" }}>
+      <div className="px-5 md:pl-20 md:pr-8">
         <FadeUp delay={0}>
           <p style={{ fontSize:14, fontFamily:"'Barlow',sans-serif", color:"rgba(255,255,255,0.6)", marginBottom:16, letterSpacing:"0.08em", textTransform:"uppercase" }}>// La Collection</p>
-          <div style={{ display:"flex", alignItems:"flex-end", justifyContent:"space-between", marginBottom:48, paddingRight:"3rem" }}>
-            <h2 style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", color:"#fff", fontSize:"clamp(3rem,7vw,5.5rem)", lineHeight:0.88, letterSpacing:"-3px" }}>
+          <div className="flex flex-wrap items-end justify-between gap-6 mb-12 md:pr-12">
+            <h2 className="title-esp" style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", color:"#fff", fontSize:"clamp(2.5rem,7vw,5.5rem)", lineHeight:0.88 }}>
               Twelve Scents,<br/>One Obsession
             </h2>
             <button className="liquid-glass flex items-center gap-2" style={{ borderRadius:9999, padding:"10px 20px", fontSize:13, fontFamily:"'Barlow',sans-serif", color:"#fff", border:"none", cursor:"pointer", whiteSpace:"nowrap" }}>
@@ -417,10 +521,10 @@ function AtelierSection() {
         className="absolute inset-0 w-full h-full object-cover z-0"
         style={{}}
       />
-      <div className="relative z-10 px-8 md:px-16 lg:px-20 pt-24 pb-10 flex flex-col min-h-screen">
+      <div className="relative z-10 px-5 md:px-16 lg:px-20 pt-24 pb-10 flex flex-col min-h-screen">
         <div className="mb-auto">
           <p className="text-sm font-body mb-6" style={{ color:"rgba(255,255,255,0.7)", letterSpacing:"0.08em", textTransform:"uppercase" }}>// L'Atelier</p>
-          <h2 style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", color:"#fff", fontSize:"clamp(3.5rem,8vw,6rem)", lineHeight:0.9, letterSpacing:"-3px" }}>
+          <h2 className="title-esp" style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", color:"#fff", fontSize:"clamp(3rem,8vw,6rem)", lineHeight:0.9 }}>
             Perfumery<br/>perfected
           </h2>
         </div>
@@ -453,33 +557,60 @@ function AtelierSection() {
 /* ── Ritual / Process Section ────────────────────────────────────────────── */
 function RitualSection() {
   const steps = [
-    { num:"01", title:"The Consultation", body:"Begin with a private olfactory consultation — in-boutique or via our digital profiling. Our advisors map your scent memory, skin chemistry, and desired emotional resonance." },
-    { num:"02", title:"The Maceration", body:"Chosen accords are blended and left to macerate for a minimum of six weeks. Time deepens the bond between molecules, allowing the fragrance to reveal its true character." },
-    { num:"03", title:"The Maturation", body:"Blends rest in glass vessels at controlled temperature. Our noses revisit the composition weekly, adjusting ratios until the scent reaches its final, irreducible expression." },
-    { num:"04", title:"The Bottling", body:"Each flacon is filled by hand, stoppered, sealed with wax, and placed in its cedar presentation case. Your name, if requested, is engraved by our in-house calligrapher." },
+    { num:"01", title:"The Consultation", meta:"90 minutes · Paris, London, New York or virtual", body:"Begin with a private olfactory consultation — in-boutique or via our digital profiling. Our advisors map your scent memory, skin chemistry, and desired emotional resonance." },
+    { num:"02", title:"The Maceration", meta:"Minimum six weeks · Undisturbed", body:"Chosen accords are blended and left to macerate for a minimum of six weeks. Time deepens the bond between molecules, allowing the fragrance to reveal its true character." },
+    { num:"03", title:"The Maturation", meta:"Eight to twelve weeks · Revisited weekly", body:"Blends rest in glass vessels at controlled temperature. Our noses revisit the composition weekly, adjusting ratios until the scent reaches its final, irreducible expression." },
+    { num:"04", title:"The Bottling", meta:"Hand-filled · Numbered and sealed in wax", body:"Each flacon is filled by hand, stoppered, sealed with wax, and placed in its cedar presentation case. Your name, if requested, is engraved by our in-house calligrapher." },
   ];
 
   return (
-    <section style={{ background:"#000", padding:"120px 5rem 120px" }}>
+    <section className="sec-ritual ambient grain" style={{ background:"#000" }}>
+      <div className="watermark">Rituel</div>
       <div style={{ maxWidth:1200, margin:"0 auto" }}>
         <FadeUp>
           <p style={{ fontSize:14, fontFamily:"'Barlow',sans-serif", color:"rgba(255,255,255,0.6)", marginBottom:16, letterSpacing:"0.08em", textTransform:"uppercase" }}>// Le Rituel</p>
-          <h2 style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", color:"#fff", fontSize:"clamp(3rem,6vw,5rem)", lineHeight:0.9, letterSpacing:"-3px", marginBottom:80 }}>
-            From raw essence<br/>to living scent
-          </h2>
+          <div className="flex flex-wrap items-end justify-between gap-6 mb-12 md:mb-20">
+            <h2 className="title-esp" style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", color:"#fff", fontSize:"clamp(2.5rem,6vw,5rem)", lineHeight:0.9 }}>
+              From raw essence<br/>to living scent
+            </h2>
+            <div style={{ maxWidth:"36ch" }}>
+              <div className="hairline" style={{ marginBottom:16 }} />
+              <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:14, color:"rgba(255,255,255,0.6)", lineHeight:1.7, fontWeight:300 }}>
+                Four movements, observed over months. Nothing is hurried and nothing is left to chance — the path from raw essence to living scent is measured in weeks, not minutes.
+              </p>
+            </div>
+          </div>
         </FadeUp>
 
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:"3px", background:"rgba(255,255,255,0.06)" }}>
+        <div className="grid-2">
           {steps.map((step, i) => (
             <FadeUp key={i} delay={i * 0.1}>
-              <div style={{ background:"#000", padding:48, minHeight:280 }}>
-                <span style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", fontSize:"4rem", color:"rgba(255,255,255,0.08)", lineHeight:1, display:"block", marginBottom:24 }}>{step.num}</span>
-                <h3 style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", color:"#fff", fontSize:"1.75rem", letterSpacing:"-0.5px", lineHeight:1, marginBottom:16 }}>{step.title}</h3>
+              <div className="step-card">
+                <div className="flex items-center gap-4" style={{ marginBottom:20 }}>
+                  <span style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", fontSize:"3.5rem", color:"rgba(255,255,255,0.12)", lineHeight:1 }}>{step.num}</span>
+                  <div className="hairline flex-1" />
+                </div>
+                <h3 style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", color:"#fff", fontSize:"1.75rem", letterSpacing:"-0.5px", lineHeight:1, marginBottom:14 }}>{step.title}</h3>
+                <div className="flex items-center gap-2.5" style={{ marginBottom:14 }}>
+                  <span style={{ width:5, height:5, borderRadius:"50%", background:"rgba(255,255,255,0.5)", flexShrink:0 }} />
+                  <span style={{ fontFamily:"'Barlow',sans-serif", fontSize:11, color:"rgba(255,255,255,0.5)", letterSpacing:"0.12em", textTransform:"uppercase", lineHeight:1.5 }}>{step.meta}</span>
+                </div>
                 <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:14, color:"rgba(255,255,255,0.65)", lineHeight:1.7, maxWidth:"38ch", fontWeight:300 }}>{step.body}</p>
               </div>
             </FadeUp>
           ))}
         </div>
+
+        <FadeUp delay={0.15}>
+          <div className="flex flex-wrap items-center justify-between gap-5" style={{ marginTop:56, paddingTop:32, borderTop:"1px solid rgba(255,255,255,0.1)" }}>
+            <p style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", fontSize:"clamp(1.25rem,2.5vw,1.6rem)", color:"rgba(255,255,255,0.85)", letterSpacing:"-0.5px" }}>
+              Every private commission follows the rituel.
+            </p>
+            <button className="liquid-glass flex items-center gap-2" style={{ borderRadius:9999, padding:"11px 22px", fontSize:13, fontFamily:"'Barlow',sans-serif", color:"#fff", border:"none", cursor:"pointer", whiteSpace:"nowrap" }}>
+              Begin a Commission <ArrowUpRight />
+            </button>
+          </div>
+        </FadeUp>
       </div>
     </section>
   );
@@ -488,29 +619,44 @@ function RitualSection() {
 /* ── Testimonials ────────────────────────────────────────────────────────── */
 function TestimonialsSection() {
   const testimonials = [
-    { quote:"Nuit Éternelle is the only scent I've worn for three years. It becomes something entirely different on my skin — warm, magnetic, completely mine.", author:"Isabelle V.", location:"Paris" },
-    { quote:"The consultation was unlike any perfume experience I've had. They understood what I wanted before I could articulate it myself.", author:"James O.", location:"London" },
-    { quote:"The flacon alone is a work of art. I've placed it on my vanity like a sculpture. The scent inside is even more extraordinary.", author:"Yuki M.", location:"Tokyo" },
+    { quote:"Nuit Éternelle is the only scent I've worn for three years. It becomes something entirely different on my skin — warm, magnetic, completely mine.", author:"Isabelle V.", location:"Paris", detail:"Wearing Nuit Éternelle since 2022" },
+    { quote:"The consultation was unlike any perfume experience I've had. They understood what I wanted before I could articulate it myself.", author:"James O.", location:"London", detail:"Bespoke commission · Maison Privée" },
+    { quote:"The flacon alone is a work of art. I've placed it on my vanity like a sculpture. The scent inside is even more extraordinary.", author:"Yuki M.", location:"Tokyo", detail:"Édition Nocturne · Flacon 214/500" },
   ];
-  const [active, setActive] = useState(0);
 
   return (
-    <section style={{ background:"#000", padding:"100px 5rem", borderTop:"1px solid rgba(255,255,255,0.06)" }}>
+    <section className="sec-testi ambient grain" style={{ background:"#000" }}>
       <FadeUp>
         <p style={{ fontSize:14, fontFamily:"'Barlow',sans-serif", color:"rgba(255,255,255,0.6)", marginBottom:16, letterSpacing:"0.08em", textTransform:"uppercase" }}>// Testimonials</p>
-        <h2 style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", color:"#fff", fontSize:"clamp(2.5rem,5vw,4rem)", lineHeight:0.9, letterSpacing:"-2px", marginBottom:64 }}>
-          Worn and remembered
-        </h2>
+        <div className="flex flex-wrap items-end justify-between gap-6 mb-10 md:mb-16">
+          <h2 className="title-esp-2" style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", color:"#fff", fontSize:"clamp(2.25rem,5vw,4rem)", lineHeight:0.9 }}>
+            Worn and remembered
+          </h2>
+          <div className="liquid-glass flex items-center gap-3" style={{ borderRadius:9999, padding:"9px 18px" }}>
+            <span className="stars">★★★★★</span>
+            <span style={{ fontFamily:"'Barlow',sans-serif", fontSize:12, color:"rgba(255,255,255,0.7)", fontWeight:300 }}>5.0 · 2,413 verified reviews</span>
+          </div>
+        </div>
       </FadeUp>
 
-      <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:24 }}>
+      <div className="grid-3">
         {testimonials.map((t, i) => (
           <FadeUp key={i} delay={i * 0.1}>
-            <div className="liquid-glass" style={{ borderRadius:"1.25rem", padding:32, minHeight:220, display:"flex", flexDirection:"column", justifyContent:"space-between" }}>
-              <p style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", fontSize:"1.15rem", color:"rgba(255,255,255,0.9)", lineHeight:1.6, letterSpacing:"-0.3px" }}>"{t.quote}"</p>
+            <div className="liquid-glass" style={{ borderRadius:"1.25rem", padding:32, minHeight:260, display:"flex", flexDirection:"column", justifyContent:"space-between" }}>
+              <span aria-hidden="true" style={{ position:"absolute", top:-8, right:18, fontFamily:"'Instrument Serif',serif", fontStyle:"italic", fontSize:"6rem", color:"rgba(255,255,255,0.07)", lineHeight:1, pointerEvents:"none" }}>"</span>
+              <div>
+                <span className="stars" style={{ display:"block", marginBottom:14 }}>★★★★★</span>
+                <p style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", fontSize:"1.15rem", color:"rgba(255,255,255,0.9)", lineHeight:1.6, letterSpacing:"-0.3px" }}>"{t.quote}"</p>
+              </div>
               <div style={{ marginTop:24, paddingTop:20, borderTop:"1px solid rgba(255,255,255,0.08)" }}>
-                <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:13, color:"#fff", fontWeight:500 }}>{t.author}</p>
-                <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:12, color:"rgba(255,255,255,0.45)", marginTop:2 }}>{t.location}</p>
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:13, color:"#fff", fontWeight:500 }}>{t.author}</p>
+                    <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:12, color:"rgba(255,255,255,0.45)", marginTop:2 }}>{t.location}</p>
+                  </div>
+                  <span className="liquid-glass" style={{ borderRadius:9999, padding:"4px 11px", fontSize:10, color:"rgba(255,255,255,0.65)", fontFamily:"'Barlow',sans-serif", whiteSpace:"nowrap", flexShrink:0 }}>Verified</span>
+                </div>
+                <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:11, color:"rgba(255,255,255,0.35)", marginTop:12, fontWeight:300 }}>{t.detail}</p>
               </div>
             </div>
           </FadeUp>
@@ -531,28 +677,54 @@ function FAQSection() {
   const [open, setOpen] = useState(null);
 
   return (
-    <section style={{ background:"#000", padding:"80px 5rem 120px", borderTop:"1px solid rgba(255,255,255,0.06)" }}>
-      <div style={{ maxWidth:800 }}>
-        <FadeUp>
-          <p style={{ fontSize:14, fontFamily:"'Barlow',sans-serif", color:"rgba(255,255,255,0.6)", marginBottom:16, letterSpacing:"0.08em", textTransform:"uppercase" }}>// Questions</p>
-          <h2 style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", color:"#fff", fontSize:"clamp(2.5rem,5vw,4rem)", lineHeight:0.9, letterSpacing:"-2px", marginBottom:56 }}>
-            The curious ask
-          </h2>
-        </FadeUp>
-        {faqs.map((faq, i) => (
-          <FadeUp key={i} delay={i * 0.08}>
-            <div style={{ borderBottom:"1px solid rgba(255,255,255,0.08)" }}>
-              <button onClick={() => setOpen(open === i ? null : i)}
-                style={{ width:"100%", display:"flex", alignItems:"center", justifyContent:"space-between", padding:"22px 0", background:"none", border:"none", cursor:"pointer", textAlign:"left" }}>
-                <span style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", fontSize:"1.25rem", color:"#fff", letterSpacing:"-0.3px", paddingRight:24 }}>{faq.q}</span>
-                <PlusIcon open={open === i} />
-              </button>
-              <div className={`accord-body${open === i ? " open" : ""}`}>
-                <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:14, color:"rgba(255,255,255,0.65)", lineHeight:1.75, fontWeight:300, paddingBottom:22, maxWidth:"60ch" }}>{faq.a}</p>
-              </div>
-            </div>
+    <section className="sec-faq ambient grain" style={{ background:"#000" }}>
+      <div style={{ maxWidth:1100, margin:"0 auto" }}>
+        <div className="faq-grid">
+          <FadeUp>
+            <p style={{ fontSize:14, fontFamily:"'Barlow',sans-serif", color:"rgba(255,255,255,0.6)", marginBottom:16, letterSpacing:"0.08em", textTransform:"uppercase" }}>// Questions</p>
+            <h2 className="title-esp-2" style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", color:"#fff", fontSize:"clamp(2.25rem,5vw,4rem)", lineHeight:0.9 }}>
+              The curious ask
+            </h2>
+            <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:14, color:"rgba(255,255,255,0.6)", lineHeight:1.75, fontWeight:300, maxWidth:"36ch", marginTop:20 }}>
+              Everything worth knowing before your first flacon. For anything not covered here, our client advisors reply within one business day.
+            </p>
+            <button className="liquid-glass flex items-center gap-2" style={{ borderRadius:9999, padding:"11px 22px", fontSize:13, fontFamily:"'Barlow',sans-serif", color:"#fff", border:"none", cursor:"pointer", marginTop:28, whiteSpace:"nowrap" }}>
+              Ask a Question <ArrowUpRight />
+            </button>
+            <div className="hairline" style={{ marginTop:36, maxWidth:220 }} />
+            <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:12, color:"rgba(255,255,255,0.4)", marginTop:16, fontWeight:300, lineHeight:1.7 }}>
+              Client Services · Monday to Saturday<br/>9h – 19h CET
+            </p>
           </FadeUp>
-        ))}
+
+          <div>
+            {faqs.map((faq, i) => (
+              <FadeUp key={i} delay={i * 0.08}>
+                <div style={{ borderBottom:"1px solid rgba(255,255,255,0.08)" }}>
+                  <button onClick={() => setOpen(open === i ? null : i)}
+                    style={{ width:"100%", display:"flex", alignItems:"center", justifyContent:"space-between", padding:"22px 0", background:"none", border:"none", cursor:"pointer", textAlign:"left" }}>
+                    <span style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", fontSize:"1.25rem", color:"#fff", letterSpacing:"-0.3px", paddingRight:24 }}>{faq.q}</span>
+                    <PlusIcon open={open === i} />
+                  </button>
+                  <div className={`accord-body${open === i ? " open" : ""}`}>
+                    <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:14, color:"rgba(255,255,255,0.65)", lineHeight:1.75, fontWeight:300, paddingBottom:22, maxWidth:"60ch" }}>{faq.a}</p>
+                  </div>
+                </div>
+              </FadeUp>
+            ))}
+          </div>
+        </div>
+
+        <FadeUp delay={0.1}>
+          <div className="flex flex-wrap items-center justify-between gap-4" style={{ marginTop:56, paddingTop:28, borderTop:"1px solid rgba(255,255,255,0.1)" }}>
+            <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:13, color:"rgba(255,255,255,0.5)", fontWeight:300 }}>
+              Still curious? Write to our client advisors —
+            </p>
+            <span style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", fontSize:"1.15rem", color:"#fff", letterSpacing:"-0.3px", cursor:"pointer" }}>
+              client.services@aeon-parfums.com
+            </span>
+          </div>
+        </FadeUp>
       </div>
     </section>
   );
@@ -561,16 +733,24 @@ function FAQSection() {
 /* ── CTA Banner ──────────────────────────────────────────────────────────── */
 function CTABanner() {
   return (
-    <section style={{ background:"#000", padding:"0 5rem 120px" }}>
+    <section className="sec-cta ambient grain" style={{ background:"#000" }}>
       <FadeUp>
-        <div className="liquid-glass" style={{ borderRadius:"1.5rem", padding:"80px 64px", display:"flex", alignItems:"center", justifyContent:"space-between", gap:48, flexWrap:"wrap" }}>
-          <div>
+        <div className="liquid-glass cta-card" style={{ borderRadius:"1.5rem", display:"flex", alignItems:"center", justifyContent:"space-between", gap:48, flexWrap:"wrap" }}>
+          <span aria-hidden="true" style={{ position:"absolute", right:-50, top:-70, width:280, height:280, borderRadius:"50%", background:"radial-gradient(circle, rgba(255,255,255,0.14), transparent 70%)", pointerEvents:"none" }} />
+          <div style={{ position:"relative" }}>
             <p style={{ fontSize:13, fontFamily:"'Barlow',sans-serif", color:"rgba(255,255,255,0.5)", marginBottom:12, letterSpacing:"0.08em", textTransform:"uppercase" }}>Private Consultation</p>
-            <h2 style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", color:"#fff", fontSize:"clamp(2rem,4vw,3.25rem)", lineHeight:0.95, letterSpacing:"-2px" }}>
+            <h2 className="title-esp-2" style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", color:"#fff", fontSize:"clamp(1.875rem,4vw,3.25rem)", lineHeight:0.95 }}>
               Your signature scent<br/>awaits discovery
             </h2>
+            <div className="flex flex-wrap gap-x-5 gap-y-2" style={{ marginTop:22 }}>
+              {["Complimentary engraving","Insured worldwide delivery","Three samples with every order"].map(item => (
+                <span key={item} className="flex items-center gap-2" style={{ fontFamily:"'Barlow',sans-serif", fontSize:12, color:"rgba(255,255,255,0.6)", fontWeight:300 }}>
+                  <span aria-hidden="true" style={{ fontSize:8, color:"rgba(255,255,255,0.9)" }}>◆</span> {item}
+                </span>
+              ))}
+            </div>
           </div>
-          <div style={{ display:"flex", gap:16, flexWrap:"wrap" }}>
+          <div className="flex flex-wrap gap-4" style={{ position:"relative" }}>
             <button className="liquid-glass-strong" style={{ borderRadius:9999, padding:"12px 28px", fontSize:14, fontFamily:"'Barlow',sans-serif", color:"#fff", border:"none", cursor:"pointer", display:"flex", alignItems:"center", gap:8 }}>
               Book a Consultation <ArrowUpRight />
             </button>
@@ -594,8 +774,8 @@ function Footer() {
   ];
 
   return (
-    <footer style={{ background:"#000", borderTop:"1px solid rgba(255,255,255,0.08)", padding:"80px 5rem 40px" }}>
-      <div style={{ display:"grid", gridTemplateColumns:"2fr 1fr 1fr 1fr 1fr", gap:48, marginBottom:80 }}>
+    <footer className="sec-footer ambient grain">
+      <div className="grid-footer">
         {/* Brand column */}
         <div>
           <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:24 }}>
@@ -614,6 +794,18 @@ function Footer() {
               </div>
             ))}
           </div>
+          <div style={{ marginTop:28 }}>
+            <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:11, color:"rgba(255,255,255,0.4)", letterSpacing:"0.1em", textTransform:"uppercase", marginBottom:8 }}>Correspondence</p>
+            <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:12, color:"rgba(255,255,255,0.55)", marginBottom:12, fontWeight:300, lineHeight:1.6, maxWidth:"34ch" }}>
+              Private previews and seasonal releases, sent twice a year.
+            </p>
+            <div className="flex gap-2" style={{ maxWidth:340 }}>
+              <input type="email" className="news-input" placeholder="Your email address" aria-label="Your email address" />
+              <button aria-label="Subscribe" className="liquid-glass-strong" style={{ borderRadius:9999, padding:"0 15px", border:"none", cursor:"pointer", color:"#fff", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
+                <ArrowUpRight />
+              </button>
+            </div>
+          </div>
         </div>
 
         {cols.map((col, i) => (
@@ -629,9 +821,28 @@ function Footer() {
         ))}
       </div>
 
-      <div style={{ borderTop:"1px solid rgba(255,255,255,0.06)", paddingTop:32, display:"flex", alignItems:"center", justifyContent:"space-between" }}>
+      <FadeUp>
+        <div style={{ paddingTop:36, borderTop:"1px solid rgba(255,255,255,0.08)", marginBottom:40 }}>
+          <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:11, color:"rgba(255,255,255,0.4)", letterSpacing:"0.1em", textTransform:"uppercase", marginBottom:20 }}>Boutiques</p>
+          <div className="flex flex-wrap gap-x-10 gap-y-5">
+            {[
+              { city:"Paris", detail:"14 Rue Saint-Honoré · Mon–Sat 10–19" },
+              { city:"London", detail:"Mount Street, Mayfair · Mon–Sat 10–18" },
+              { city:"New York", detail:"Madison Avenue · Mon–Sat 10–19" },
+              { city:"Tokyo", detail:"Ginza Six, Chuo-ku · Daily 11–20" },
+            ].map(b => (
+              <div key={b.city} style={{ minWidth:220 }}>
+                <p style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", fontSize:"1.2rem", color:"#fff", letterSpacing:"-0.4px", marginBottom:4 }}>{b.city}</p>
+                <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:12, color:"rgba(255,255,255,0.45)", fontWeight:300, lineHeight:1.5 }}>{b.detail}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </FadeUp>
+
+      <div className="flex flex-wrap items-center justify-between gap-4" style={{ borderTop:"1px solid rgba(255,255,255,0.06)", paddingTop:32 }}>
         <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:12, color:"rgba(255,255,255,0.3)", fontWeight:300 }}>© 2025 Maison AEON. All rights reserved. Paris · London · New York · Tokyo.</p>
-        <div style={{ display:"flex", gap:24 }}>
+        <div className="flex flex-wrap gap-x-6 gap-y-2">
           {["Privacy Policy","Terms of Use","Cookie Preferences"].map((l,i) => (
             <span key={i} style={{ fontFamily:"'Barlow',sans-serif", fontSize:12, color:"rgba(255,255,255,0.3)", cursor:"pointer" }}>{l}</span>
           ))}
