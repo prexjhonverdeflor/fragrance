@@ -191,6 +191,141 @@
   }
   .news-input::placeholder { color: rgba(255,255,255,0.35); }
   .news-input:focus { border-color: rgba(255,255,255,0.4); }
+
+  /* ===== Lower-half redesign: ritual -> footer ============================ */
+  :root { --ink:#17110c; --bone:#e9e1d2; --amber:#c98a4b; --cedar:#06100c; --ease-out:cubic-bezier(.2,.8,.2,1); }
+  .mask { display:block; overflow:hidden; padding-bottom:.14em; margin-bottom:-.14em; }
+  .mask-in { display:block; transform:translateY(110%); transition:transform 1.1s var(--ease-out); }
+  .mask.in .mask-in { transform:none; }
+  .eyebrow { font-family:'Barlow',sans-serif; font-size:12px; letter-spacing:.14em; text-transform:uppercase; }
+  .serif { font-family:'Instrument Serif',serif; font-style:italic; }
+  @keyframes drift { 0%,100% { transform:translate3d(0,0,0) scale(1); } 50% { transform:translate3d(6%,-8%,0) scale(1.15); } }
+  .smoke { position:absolute; border-radius:50%; filter:blur(48px); pointer-events:none; animation:drift 22s ease-in-out infinite; }
+  @media (prefers-reduced-motion: reduce) { .smoke { animation:none; } .mask-in { transition:none; transform:none; } }
+
+  /* Ritual: pinned maceration scene */
+  .rit { position:relative; isolation:isolate; padding-top:96px; background:linear-gradient(180deg,#000 0,#130b06 20%,#1e1209 62%,#0e0805 100%); }
+  .rit-head { max-width:1200px; margin:0 auto; padding:0 1.25rem; }
+  .rit-track { position:relative; --p:0; }
+  .rit-stage { position:relative; overflow:hidden; padding:56px 1.25rem 32px; }
+  .rit-glow { position:absolute; inset:0; z-index:-1; background:radial-gradient(560px 560px at 26% 50%, rgba(201,138,75,calc(.1 + var(--p)*.32)), transparent 70%); }
+  .rit-mark { position:absolute; left:0; top:50%; z-index:-1; font-size:clamp(9rem,30vw,28rem); line-height:1; color:rgba(255,235,210,.04); white-space:nowrap; transform:translate3d(calc((.5 - var(--p))*18vw),-50%,0); pointer-events:none; }
+  .rit-grid { max-width:1200px; margin:0 auto; display:grid; gap:40px; position:relative; }
+  .rit-bottle { position:relative; width:min(220px,52vw); margin:0 auto; }
+  .rit-bottle svg { width:100%; height:auto; display:block; overflow:visible; }
+  .rit-pedestal { height:1px; margin-top:6px; background:linear-gradient(90deg,transparent,rgba(255,225,190,.5),transparent); }
+  .rit-list { list-style:none; position:relative; padding-left:0; }
+  .rit-rail { display:none; }
+  .rit-step { padding:20px 0; border-top:1px solid rgba(255,235,210,.12); transition:opacity .7s var(--ease-out); }
+  .rit-step:last-child { border-bottom:1px solid rgba(255,235,210,.12); }
+  .rit-row { display:flex; align-items:baseline; gap:20px; }
+  .rit-num { font-size:clamp(2.5rem,5vw,3.5rem); line-height:1; color:rgba(255,235,210,.22); transition:color .7s; min-width:2.2ch; }
+  .rit-step.on .rit-num { color:var(--amber); }
+  .rit-title { color:#fff; font-size:clamp(1.6rem,3vw,2.4rem); line-height:1; letter-spacing:-.5px; }
+  .rit-meta { font-family:'Barlow',sans-serif; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:rgba(255,235,210,.55); margin:12px 0 0 calc(2.2ch + 20px); }
+  .rit-body { display:grid; grid-template-rows:1fr; transition:grid-template-rows .7s var(--ease-out); }
+  .rit-body > div { overflow:hidden; }
+  .rit-body p { font-family:'Barlow',sans-serif; font-weight:300; font-size:14px; line-height:1.7; color:rgba(255,240,225,.7); max-width:44ch; margin:14px 0 0 calc(2.2ch + 20px); }
+  .rit-foot { max-width:1200px; margin:0 auto; padding:48px 1.25rem 96px; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:20px; }
+  @media (min-width:900px) {
+    .rit-track { height:380vh; }
+    .rit-stage { position:sticky; top:0; height:100vh; display:flex; align-items:center; padding:0 5rem; }
+    .rit-grid { grid-template-columns:.85fr 1.15fr; align-items:center; width:100%; gap:64px; }
+    .rit-bottle { width:min(300px,30vh*.75 + 140px); }
+    .rit-head { padding:0 5rem; }
+    .rit-foot { padding:64px 5rem 160px; }
+    .rit-rail { display:block; position:absolute; left:-28px; top:0; bottom:0; width:1px; background:rgba(255,235,210,.14); }
+    .rit-rail i { display:block; width:1px; background:var(--amber); height:calc(var(--p)*100%); }
+    .rit-step { opacity:.32; } .rit-step.done { opacity:.55; } .rit-step.on { opacity:1; }
+    .rit-body { grid-template-rows:0fr; } .rit-step.on .rit-body { grid-template-rows:1fr; }
+  }
+
+  /* Testimonials: bone sheet lifting over the ritual */
+  .bone { position:relative; z-index:2; margin-top:-48px; border-radius:2.5rem 2.5rem 0 0; background:var(--bone); color:var(--ink); padding:96px 1.25rem 112px; overflow:hidden; box-shadow:0 -40px 80px rgba(0,0,0,.5); }
+  .bone::before { content:""; position:absolute; inset:0; pointer-events:none; background:radial-gradient(700px 420px at 90% 0%,rgba(201,138,75,.22),transparent 65%),radial-gradient(600px 500px at 0% 100%,rgba(120,80,40,.12),transparent 65%); }
+  .bone-in { position:relative; max-width:1200px; margin:0 auto; }
+  .bone-title { font-size:clamp(3.25rem,10vw,9rem); line-height:.88; letter-spacing:-.04em; color:var(--ink); }
+  .bone-pill { display:inline-flex; align-items:center; gap:12px; border:1px solid rgba(23,17,12,.2); border-radius:9999px; padding:9px 18px; font-family:'Barlow',sans-serif; font-size:12px; color:rgba(23,17,12,.7); }
+  .bone-stars { color:#9a5b2b; letter-spacing:3px; font-size:12px; }
+  .t-grid { display:grid; gap:28px; margin-top:56px; }
+  .t-card { position:relative; }
+  .t-quote { font-size:1.2rem; line-height:1.55; letter-spacing:-.3px; color:var(--ink); }
+  .t-meta { margin-top:24px; padding-top:18px; border-top:1px solid rgba(23,17,12,.18); font-family:'Barlow',sans-serif; }
+  .t-meta b { font-weight:500; font-size:13px; } .t-meta span { font-size:12px; color:rgba(23,17,12,.55); }
+  .t-meta em { display:block; font-style:normal; font-size:11px; color:rgba(23,17,12,.45); margin-top:10px; font-weight:300; }
+  .t-small { background:rgba(23,17,12,.05); border:1px solid rgba(23,17,12,.1); border-radius:1.25rem; padding:28px; }
+  .t-feature .t-quote { font-size:clamp(1.7rem,3.4vw,3rem); line-height:1.12; letter-spacing:-.03em; }
+  .t-mark { position:absolute; top:-.45em; left:-.05em; font-size:9rem; line-height:1; color:rgba(154,91,43,.35); pointer-events:none; }
+  .t-ring { position:absolute; right:-120px; bottom:-120px; width:420px; height:420px; border-radius:50%; background:repeating-radial-gradient(circle,transparent 0 22px,rgba(23,17,12,.06) 22px 23px); pointer-events:none; }
+  @media (min-width:900px) {
+    .bone { margin-top:-64px; padding:160px 5rem 160px; }
+    .t-grid { grid-template-columns:repeat(12,1fr); gap:32px; margin-top:96px; }
+    .t-feature { grid-column:1 / 8; grid-row:1 / 3; padding-top:48px; }
+    .t-a { grid-column:9 / 13; margin-top:96px; }
+    .t-b { grid-column:8 / 12; }
+  }
+
+  /* FAQ: cedar */
+  .cedar { position:relative; isolation:isolate; background:radial-gradient(900px 520px at 88% 0%,rgba(80,125,92,.26),transparent 62%),radial-gradient(700px 500px at 0% 100%,rgba(201,138,75,.08),transparent 65%),linear-gradient(180deg,#07120d,#0b1b14 60%,var(--cedar)); padding:96px 1.25rem 96px; }
+  .cedar-q { position:absolute; right:2vw; top:4%; z-index:-1; font-size:clamp(14rem,38vw,36rem); line-height:.8; color:rgba(190,225,200,.045); pointer-events:none; }
+  .faq-row { border-top:1px solid rgba(220,240,225,.14); transition:background .4s; }
+  .faq-row:last-child { border-bottom:1px solid rgba(220,240,225,.14); }
+  .faq-row.open, .faq-row:hover { background:linear-gradient(90deg,rgba(190,225,200,.05),transparent); }
+  .faq-btn { width:100%; display:flex; align-items:center; gap:20px; padding:26px 0; background:none; border:none; cursor:pointer; text-align:left; }
+  .faq-n { font-size:1rem; color:var(--amber); min-width:2.4ch; }
+  .faq-side { position:static; }
+  @media (min-width:768px) { .faq-side { position:sticky; top:120px; align-self:start; } }
+  @media (min-width:900px) { .cedar { padding:160px 5rem 140px; } }
+
+  /* CTA: video window that opens as it scrolls in */
+  .cta2 { position:relative; background:var(--cedar); padding:0; }
+  .cta-stage { position:relative; min-height:100svh; overflow:hidden; display:flex; align-items:flex-end; will-change:clip-path; background:radial-gradient(900px 600px at 70% 30%,#5a3418,#1b0f07 60%,#050302); clip-path:inset(var(--inset,6vw) var(--inset,6vw) var(--inset,6vw) round var(--rad,32px)); }
+  .cta-stage video { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transform:scale(var(--vs,1.12)); }
+  .cta-veil { position:absolute; inset:0; background:linear-gradient(180deg,rgba(6,16,12,.55),rgba(0,0,0,.15) 40%,rgba(0,0,0,.85)); }
+  .cta-content { position:relative; width:100%; max-width:1400px; margin:0 auto; padding:96px 1.25rem 56px; }
+  .cta-title { font-size:clamp(3rem,9.5vw,9rem); line-height:.9; letter-spacing:-.04em; color:#fff; }
+  .cta-row { display:flex; flex-wrap:wrap; gap:32px; align-items:flex-end; justify-content:space-between; margin-top:40px; }
+  @media (min-width:900px) { .cta-content { padding:120px 5rem 72px; } }
+
+  /* Footer */
+  .foot { position:relative; isolation:isolate; background:linear-gradient(180deg,#0a0507,#050204); padding:80px 1.25rem 0; overflow:hidden; }
+  .foot::before { content:""; position:absolute; inset:0; z-index:-1; background:radial-gradient(800px 420px at 50% 112%,rgba(201,138,75,.2),transparent 65%),radial-gradient(500px 300px at 100% 0%,rgba(130,60,80,.14),transparent 65%); }
+  .foot-city { display:grid; grid-template-columns:1fr; border-top:1px solid rgba(255,235,210,.12); margin-bottom:48px; }
+  .foot-city > div { padding:22px 0; border-bottom:1px solid rgba(255,235,210,.1); }
+  .foot-mark { font-size:clamp(8rem,34vw,34rem); line-height:.74; letter-spacing:-.05em; text-align:center; white-space:nowrap; margin:40px -2vw 0; padding-bottom:.04em; background:linear-gradient(180deg,rgba(255,235,210,.22),rgba(255,235,210,0) 85%); -webkit-background-clip:text; background-clip:text; color:transparent; user-select:none; transform:translate3d(0,calc((1 - var(--fp,1))*18%),0); }
+  @media (min-width:768px) { .foot { padding:112px 5rem 0; } .foot-city { grid-template-columns:repeat(4,1fr); } .foot-city > div { border-bottom:none; border-right:1px solid rgba(255,235,210,.1); padding:24px 24px 24px 0; } .foot-city > div + div { padding-left:24px; } .foot-city > div:last-child { border-right:none; } }
+
+  body.nav-light nav .liquid-glass { background:rgba(20,14,10,.78); transition:background .3s; }
+
+  /* Collection: pinned horizontal cabinet */
+  .col { position:relative; isolation:isolate; background:#000; }
+  .col-track { position:relative; }
+  .col-stage { position:relative; overflow:hidden; padding:80px 0 56px; display:flex; flex-direction:column; }
+  .col-bg { position:absolute; inset:0; z-index:-1; opacity:0; transition:opacity .2s linear; }
+  .col-bg:first-child { opacity:1; }
+  .col-head { padding:0 1.25rem; }
+  .col-inner { display:flex; gap:20px; padding:32px 1.25rem 8px; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none; -webkit-overflow-scrolling:touch; }
+  .col-inner::-webkit-scrollbar { display:none; }
+  .col-panel { flex:0 0 78vw; max-width:360px; height:500px; scroll-snap-align:center; position:relative; overflow:hidden; border-radius:1.75rem; border:1px solid rgba(255,235,210,.14); padding:24px; display:flex; flex-direction:column; background:linear-gradient(170deg,var(--c1),#050304 92%); transition:transform .6s var(--ease-out), border-color .4s; }
+  .col-panel:hover { transform:translateY(-8px); border-color:rgba(255,235,210,.3); }
+  .col-panel::before { content:""; position:absolute; left:50%; top:30%; width:340px; height:340px; transform:translate(-50%,-50%); background:radial-gradient(circle,var(--c2),transparent 62%); opacity:.38; pointer-events:none; transition:opacity .6s; }
+  .col-panel:hover::before { opacity:.65; }
+  .col-num { position:absolute; right:18px; top:6px; font-size:6.5rem; line-height:1; color:transparent; -webkit-text-stroke:1px rgba(255,235,210,.2); pointer-events:none; }
+  .col-bottle { flex:1; min-height:0; display:flex; align-items:center; justify-content:center; position:relative; margin:8px 0 12px; }
+  .col-bottle svg { height:100%; max-height:240px; width:auto; overflow:visible; filter:drop-shadow(0 24px 30px rgba(0,0,0,.55)); transition:transform .8s var(--ease-out); }
+  .col-panel:hover .col-bottle svg { transform:translateY(-6px) scale(1.04); }
+  .col-prog { display:none; }
+  @media (min-width:900px) {
+    .col-stage { position:sticky; top:0; height:100vh; padding:96px 0 40px; }
+    .col-head { padding:0 5rem; }
+    .col-inner { overflow:visible; scroll-snap-type:none; padding:0 5rem; flex:1; align-items:stretch; margin-top:28px; will-change:transform; gap:28px; }
+    .col-panel { flex:0 0 clamp(300px,26vw,400px); max-width:none; height:auto; }
+    .col-prog { display:flex; align-items:center; gap:16px; padding:0 5rem; margin-top:20px; font-family:'Barlow',sans-serif; font-size:11px; letter-spacing:.14em; color:rgba(255,235,210,.55); }
+    .col-prog i { flex:1; height:1px; background:rgba(255,235,210,.14); position:relative; display:block; }
+    .col-prog i b { position:absolute; left:0; top:0; bottom:0; background:var(--amber); width:calc(var(--q,0)*100%); }
+  }
+  .col-inner::after { content:""; flex:0 0 1px; }
+  @media (min-width:900px) { .col-inner::after { flex-basis:5rem; } }
 </style>
 </head>
 <body class="bg-black">
@@ -441,50 +576,64 @@ function CollectionSection() {
     { name:"Jardin Perdu", family:"Green Floral", accord:"Peony · Moss · White Musk", intensity:"Eau de Toilette", price:"€240", tags:["Daytime","Feminine"] },
   ];
 
+
+  const trackRef = useRef(null), stageRef = useRef(null), innerRef = useRef(null), bgRefs = useRef([]);
+  const [idx, setIdx] = useState(0);
+  useScrollP(trackRef, "pin", (_p, track) => {
+    const st = stageRef.current, inner = innerRef.current; if (!st || !inner) return;
+    if (window.innerWidth < 900) { track.style.height = ""; inner.style.transform = ""; return; }
+    const travel = Math.max(0, inner.scrollWidth - st.clientWidth);
+    const h = window.innerHeight + travel;
+    if (track.style.height !== h + "px") track.style.height = h + "px";
+    const q = Math.min(1, Math.max(0, -track.getBoundingClientRect().top / Math.max(1, travel)));
+    inner.style.transform = `translate3d(${(-q * travel).toFixed(1)}px,0,0)`;
+    track.style.setProperty("--q", q.toFixed(4));
+    const pos = q * (fragrances.length - 1);
+    bgRefs.current.forEach((el, k) => { if (el) el.style.opacity = Math.max(0, 1 - Math.abs(pos - k)).toFixed(3); });
+    setIdx(Math.round(pos));
+  });
+
   return (
-    <section className="sec-collection" style={{ background:"#000" }}>
-      <div className="px-5 md:pl-20 md:pr-8">
-        <FadeUp delay={0}>
-          <p style={{ fontSize:14, fontFamily:"'Barlow',sans-serif", color:"rgba(255,255,255,0.6)", marginBottom:16, letterSpacing:"0.08em", textTransform:"uppercase" }}>// La Collection</p>
-          <div className="flex flex-wrap items-end justify-between gap-6 mb-12 md:pr-12">
-            <h2 className="title-esp" style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", color:"#fff", fontSize:"clamp(2.5rem,7vw,5.5rem)", lineHeight:0.88 }}>
-              Twelve Scents,<br/>One Obsession
-            </h2>
-            <button className="liquid-glass flex items-center gap-2" style={{ borderRadius:9999, padding:"10px 20px", fontSize:13, fontFamily:"'Barlow',sans-serif", color:"#fff", border:"none", cursor:"pointer", whiteSpace:"nowrap" }}>
-              View Full Collection <ArrowUpRight />
-            </button>
-          </div>
-        </FadeUp>
-
-        <div className="collection-scroll">
+    <section className="col" id="sec-collection">
+      <div className="col-track" ref={trackRef}>
+        <div className="col-stage" ref={stageRef}>
           {fragrances.map((f, i) => (
-            <FadeUp key={i} delay={i * 0.08} style={{ flexShrink:0, width:280 }}>
-              <div className="liquid-glass" style={{ borderRadius:"1.25rem", padding:24, minHeight:380, display:"flex", flexDirection:"column" }}>
-                {/* Faux bottle visual */}
-                <div style={{ flex:1, display:"flex", alignItems:"center", justifyContent:"center", marginBottom:20 }}>
-                  <div style={{ width:72, height:110, borderRadius:"8px 8px 4px 4px", background:"linear-gradient(160deg,rgba(255,255,255,0.12),rgba(255,255,255,0.03))", boxShadow:"inset 0 1px 1px rgba(255,255,255,0.2), 0 8px 32px rgba(0,0,0,0.4)", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"flex-end", paddingBottom:8, position:"relative" }}>
-                    <div style={{ width:20, height:16, borderRadius:"4px 4px 0 0", background:"rgba(255,255,255,0.08)", position:"absolute", top:-14 }} />
-                    <span style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", fontSize:9, color:"rgba(255,255,255,0.5)", textAlign:"center", lineHeight:1.2 }}>{f.name}</span>
-                  </div>
-                </div>
-
-                <div style={{ display:"flex", gap:4, flexWrap:"wrap", marginBottom:12 }}>
-                  {f.tags.map((t,j) => (
-                    <span key={j} className="liquid-glass" style={{ borderRadius:9999, padding:"3px 10px", fontSize:10, color:"rgba(255,255,255,0.8)", fontFamily:"'Barlow',sans-serif" }}>{t}</span>
+            <div key={i} className="col-bg" ref={el => (bgRefs.current[i] = el)} style={{ background:`radial-gradient(900px 600px at 50% 40%, ${PALETTE[i][0]}, #000 75%)` }} />
+          ))}
+          <div className="col-head">
+            <p className="eyebrow" style={{ color:"rgba(255,235,210,.6)", marginBottom:16 }}>// La Collection</p>
+            <div className="flex flex-wrap items-end justify-between gap-6">
+              <h2 className="serif title-esp" style={{ color:"#fff", fontSize:"clamp(2.5rem,6.5vw,5.5rem)", lineHeight:.88 }}>
+                <Mask>Twelve Scents,</Mask><Mask delay={0.12}>One Obsession</Mask>
+              </h2>
+              <button className="liquid-glass flex items-center gap-2" style={{ borderRadius:9999, padding:"10px 20px", fontSize:13, fontFamily:"'Barlow',sans-serif", color:"#fff", border:"none", cursor:"pointer", whiteSpace:"nowrap" }}>
+                View Full Collection <ArrowUpRight />
+              </button>
+            </div>
+          </div>
+          <div className="col-inner" ref={innerRef}>
+            {fragrances.map((f, i) => (
+              <article key={i} className="col-panel" style={{ "--c1":PALETTE[i][0], "--c2":PALETTE[i][1] }}>
+                <span className="col-num serif" aria-hidden="true">0{i + 1}</span>
+                <div className="flex flex-wrap gap-1" style={{ position:"relative", maxWidth:"70%" }}>
+                  {f.tags.map((t, j) => (
+                    <span key={j} className="liquid-glass" style={{ borderRadius:9999, padding:"3px 10px", fontSize:10, color:"rgba(255,255,255,.85)", fontFamily:"'Barlow',sans-serif" }}>{t}</span>
                   ))}
                 </div>
-
-                <h3 style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", color:"#fff", fontSize:"1.5rem", letterSpacing:"-0.5px", lineHeight:1 }}>{f.name}</h3>
-                <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:11, color:"rgba(255,255,255,0.5)", marginTop:4, letterSpacing:"0.06em", textTransform:"uppercase" }}>{f.family}</p>
-                <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:12, color:"rgba(255,255,255,0.7)", marginTop:8, lineHeight:1.5 }}>{f.accord}</p>
-
-                <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginTop:16, paddingTop:14, borderTop:"1px solid rgba(255,255,255,0.08)" }}>
-                  <span style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", fontSize:"1.25rem", color:"#fff" }}>{f.price}</span>
-                  <button className="liquid-glass-strong" style={{ borderRadius:9999, padding:"7px 16px", fontSize:12, fontFamily:"'Barlow',sans-serif", color:"#fff", border:"none", cursor:"pointer" }}>Add to Ritual</button>
+                <div className="col-bottle"><Bottle i={i} c1={PALETTE[i][0]} c2={PALETTE[i][1]} /></div>
+                <div style={{ position:"relative" }}>
+                  <h3 className="serif" style={{ color:"#fff", fontSize:"clamp(1.9rem,2.6vw,2.4rem)", letterSpacing:"-.8px", lineHeight:1 }}>{f.name}</h3>
+                  <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:11, color:PALETTE[i][1], marginTop:8, letterSpacing:".1em", textTransform:"uppercase" }}>{f.family} · {f.intensity}</p>
+                  <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:13, color:"rgba(255,240,225,.75)", marginTop:8, lineHeight:1.5, fontWeight:300 }}>{f.accord}</p>
+                  <div className="flex items-center justify-between" style={{ marginTop:16, paddingTop:14, borderTop:"1px solid rgba(255,235,210,.14)" }}>
+                    <span className="serif" style={{ fontSize:"1.4rem", color:"#fff" }}>{f.price}</span>
+                    <button className="liquid-glass-strong" style={{ borderRadius:9999, padding:"8px 18px", fontSize:12, fontFamily:"'Barlow',sans-serif", color:"#fff", border:"none", cursor:"pointer" }}>Add to Ritual</button>
+                  </div>
                 </div>
-              </div>
-            </FadeUp>
-          ))}
+              </article>
+            ))}
+          </div>
+          <div className="col-prog" aria-hidden="true"><span>0{idx + 1} / 0{fragrances.length}</span><i><b /></i><span>Scroll</span></div>
         </div>
       </div>
     </section>
@@ -555,6 +704,95 @@ function AtelierSection() {
 }
 
 /* ── Ritual / Process Section ────────────────────────────────────────────── */
+/* -- Scroll helpers (lower half) -------------------------------------------- */
+const REDUCED = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+function useScrollP(ref, mode, cb) {
+  const cbRef = useRef(cb); cbRef.current = cb;
+  useEffect(() => {
+    const el = ref.current; if (!el) return;
+    let raf = 0;
+    const calc = () => {
+      raf = 0;
+      const r = el.getBoundingClientRect(), vh = window.innerHeight;
+      let p = mode === "pin" ? -r.top / Math.max(1, r.height - vh) : (vh - r.top) / (r.height + vh);
+      p = Math.min(1, Math.max(0, p));
+      cbRef.current(REDUCED ? 1 : p, el);
+    };
+    const on = () => { if (!raf) raf = requestAnimationFrame(calc); };
+    calc();
+    window.addEventListener("scroll", on, { passive: true });
+    window.addEventListener("resize", on);
+    return () => { cancelAnimationFrame(raf); window.removeEventListener("scroll", on); window.removeEventListener("resize", on); };
+  }, []);
+}
+function Mask({ children, delay = 0, className = "" }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const el = ref.current; if (!el) return;
+    if (REDUCED || !("IntersectionObserver" in window)) { el.classList.add("in"); return; }
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { el.classList.add("in"); io.disconnect(); } }, { threshold: 0.15 });
+    io.observe(el); return () => io.disconnect();
+  }, []);
+  return <span ref={ref} className={`mask ${className}`}><span className="mask-in" style={{ transitionDelay: delay + "s" }}>{children}</span></span>;
+}
+const ATELIER_VIDEO = "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260418_094631_d30ab262-45ee-4b7d-99f3-5d5848c8ef13.mp4";
+
+const BOTTLES = [
+  "M30 70 H130 Q140 70 140 80 V200 Q140 210 130 210 H30 Q20 210 20 200 V80 Q20 70 30 70 Z",
+  "M52 70 H108 Q114 70 114 76 V204 Q114 210 108 210 H52 Q46 210 46 204 V76 Q46 70 52 70 Z",
+  "M80 74 A68 68 0 1 1 79.9 74 Z",
+  "M58 70 H102 L140 200 Q142 210 132 210 H28 Q18 210 20 200 Z",
+  "M30 210 V112 Q30 70 80 70 Q130 70 130 112 V210 Z",
+];
+function Bottle({ i, c1, c2 }) {
+  return (
+    <svg viewBox="0 0 160 220" aria-hidden="true">
+      <defs>
+        <clipPath id={"bc" + i}><path d={BOTTLES[i]} /></clipPath>
+        <linearGradient id={"bl" + i} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={c2} /><stop offset="1" stopColor={c1} /></linearGradient>
+        <linearGradient id={"bg" + i} x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#fff" stopOpacity=".3" /><stop offset=".25" stopColor="#fff" stopOpacity=".03" /><stop offset=".85" stopColor="#fff" stopOpacity=".03" /><stop offset="1" stopColor="#fff" stopOpacity=".18" /></linearGradient>
+      </defs>
+      <rect x="64" y="22" width="32" height="50" rx="4" fill="#bfa06a" /><rect x="64" y="22" width="32" height="50" rx="4" fill="url(#bg0)" opacity=".4" />
+      <g clipPath={"url(#bc" + i + ")"}><rect x="0" y="108" width="160" height="110" fill={"url(#bl" + i + ")"} /><ellipse cx="80" cy="108" rx="70" ry="3" fill="#fff" opacity=".35" /></g>
+      <path d={BOTTLES[i]} fill={"url(#bg" + i + ")"} stroke="rgba(255,235,210,.45)" />
+      <path d="M36 90 V190" stroke="rgba(255,255,255,.45)" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+const PALETTE = [
+  ["#3a1608", "#e0903f"], ["#2a1b3f", "#b9a2e8"], ["#08252c", "#7fd0d4"], ["#33200a", "#e3b441"], ["#10281a", "#9fd88c"],
+];
+
+function Flacon({ liqRef }) {
+  return (
+    <svg viewBox="0 0 240 400" role="img" aria-label="Glass flacon filling with fragrance as the ritual progresses">
+      <defs>
+        <clipPath id="fl-body"><rect x="48" y="128" width="144" height="234" rx="8" /></clipPath>
+        <linearGradient id="fl-liq" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#f0b66e" /><stop offset=".55" stopColor="#b8702f" /><stop offset="1" stopColor="#6b3a14" /></linearGradient>
+        <linearGradient id="fl-glass" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#fff" stopOpacity=".28" /><stop offset=".2" stopColor="#fff" stopOpacity=".04" /><stop offset=".8" stopColor="#fff" stopOpacity=".03" /><stop offset="1" stopColor="#fff" stopOpacity=".2" /></linearGradient>
+        <linearGradient id="fl-cap" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#3a2a1a" /><stop offset=".4" stopColor="#c9a36a" /><stop offset="1" stopColor="#4a3320" /></linearGradient>
+      </defs>
+      <rect x="86" y="16" width="68" height="58" rx="6" fill="url(#fl-cap)" />
+      <rect x="104" y="74" width="32" height="56" fill="url(#fl-glass)" stroke="rgba(255,235,210,.35)" />
+      <g clipPath="url(#fl-body)">
+        <rect x="48" y="128" width="144" height="234" fill="rgba(255,235,210,.03)" />
+        <g ref={liqRef} style={{ transform: "translateY(234px)" }}>
+          <rect x="48" y="128" width="144" height="240" fill="url(#fl-liq)" />
+          <ellipse cx="120" cy="128" rx="72" ry="4" fill="#ffd9a0" opacity=".7" />
+        </g>
+      </g>
+      <rect x="40" y="120" width="160" height="250" rx="14" fill="url(#fl-glass)" stroke="rgba(255,235,210,.45)" />
+      <path d="M58 140 L58 350" stroke="rgba(255,255,255,.55)" strokeWidth="2" strokeLinecap="round" />
+      <path d="M180 150 L180 300" stroke="rgba(255,255,255,.18)" strokeWidth="1.5" strokeLinecap="round" />
+      <g style={{ opacity: "calc((var(--p) - 0.78) * 6)" }}>
+        <circle cx="120" cy="96" r="15" fill="#8e1f1f" /><circle cx="120" cy="96" r="9" fill="none" stroke="rgba(255,220,200,.5)" />
+      </g>
+      <rect x="82" y="248" width="76" height="52" rx="3" fill="rgba(10,6,3,.55)" stroke="rgba(255,235,210,.3)" />
+      <text x="120" y="280" textAnchor="middle" fontFamily="Instrument Serif" fontStyle="italic" fontSize="20" fill="#f5e6cf">AEON</text>
+    </svg>
+  );
+}
+
 function RitualSection() {
   const steps = [
     { num:"01", title:"The Consultation", meta:"90 minutes · Paris, London, New York or virtual", body:"Begin with a private olfactory consultation — in-boutique or via our digital profiling. Our advisors map your scent memory, skin chemistry, and desired emotional resonance." },
@@ -563,54 +801,66 @@ function RitualSection() {
     { num:"04", title:"The Bottling", meta:"Hand-filled · Numbered and sealed in wax", body:"Each flacon is filled by hand, stoppered, sealed with wax, and placed in its cedar presentation case. Your name, if requested, is engraved by our in-house calligrapher." },
   ];
 
+
+  const trackRef = useRef(null), liqRef = useRef(null);
+  const [active, setActive] = useState(0);
+  useScrollP(trackRef, "pin", (p, el) => {
+    el.style.setProperty("--p", p.toFixed(4));
+    const lvl = 0.1 + 0.9 * Math.min(1, p * 1.05);
+    if (liqRef.current) liqRef.current.style.transform = `translateY(${((1 - lvl) * 234).toFixed(1)}px)`;
+    setActive(Math.min(steps.length - 1, Math.floor(p * steps.length)));
+  });
+
   return (
-    <section className="sec-ritual ambient grain" style={{ background:"#000" }}>
-      <div className="watermark">Rituel</div>
-      <div style={{ maxWidth:1200, margin:"0 auto" }}>
-        <FadeUp>
-          <p style={{ fontSize:14, fontFamily:"'Barlow',sans-serif", color:"rgba(255,255,255,0.6)", marginBottom:16, letterSpacing:"0.08em", textTransform:"uppercase" }}>// Le Rituel</p>
-          <div className="flex flex-wrap items-end justify-between gap-6 mb-12 md:mb-20">
-            <h2 className="title-esp" style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", color:"#fff", fontSize:"clamp(2.5rem,6vw,5rem)", lineHeight:0.9 }}>
-              From raw essence<br/>to living scent
-            </h2>
-            <div style={{ maxWidth:"36ch" }}>
-              <div className="hairline" style={{ marginBottom:16 }} />
-              <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:14, color:"rgba(255,255,255,0.6)", lineHeight:1.7, fontWeight:300 }}>
-                Four movements, observed over months. Nothing is hurried and nothing is left to chance — the path from raw essence to living scent is measured in weeks, not minutes.
-              </p>
-            </div>
-          </div>
-        </FadeUp>
-
-        <div className="grid-2">
-          {steps.map((step, i) => (
-            <FadeUp key={i} delay={i * 0.1}>
-              <div className="step-card">
-                <div className="flex items-center gap-4" style={{ marginBottom:20 }}>
-                  <span style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", fontSize:"3.5rem", color:"rgba(255,255,255,0.12)", lineHeight:1 }}>{step.num}</span>
-                  <div className="hairline flex-1" />
-                </div>
-                <h3 style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", color:"#fff", fontSize:"1.75rem", letterSpacing:"-0.5px", lineHeight:1, marginBottom:14 }}>{step.title}</h3>
-                <div className="flex items-center gap-2.5" style={{ marginBottom:14 }}>
-                  <span style={{ width:5, height:5, borderRadius:"50%", background:"rgba(255,255,255,0.5)", flexShrink:0 }} />
-                  <span style={{ fontFamily:"'Barlow',sans-serif", fontSize:11, color:"rgba(255,255,255,0.5)", letterSpacing:"0.12em", textTransform:"uppercase", lineHeight:1.5 }}>{step.meta}</span>
-                </div>
-                <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:14, color:"rgba(255,255,255,0.65)", lineHeight:1.7, maxWidth:"38ch", fontWeight:300 }}>{step.body}</p>
-              </div>
-            </FadeUp>
-          ))}
-        </div>
-
-        <FadeUp delay={0.15}>
-          <div className="flex flex-wrap items-center justify-between gap-5" style={{ marginTop:56, paddingTop:32, borderTop:"1px solid rgba(255,255,255,0.1)" }}>
-            <p style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", fontSize:"clamp(1.25rem,2.5vw,1.6rem)", color:"rgba(255,255,255,0.85)", letterSpacing:"-0.5px" }}>
-              Every private commission follows the rituel.
+    <section className="rit sec-ritual-new" id="sec-ritual">
+      <div className="rit-head">
+        <p className="eyebrow" style={{ color:"rgba(255,235,210,.6)", marginBottom:16 }}>// Le Rituel</p>
+        <div className="flex flex-wrap items-end justify-between gap-6">
+          <h2 className="serif title-esp" style={{ color:"#fff", fontSize:"clamp(2.75rem,7vw,6.5rem)", lineHeight:.9 }}>
+            <Mask>From raw essence</Mask><Mask delay={0.12}>to living scent</Mask>
+          </h2>
+          <div style={{ maxWidth:"36ch" }}>
+            <div className="hairline" style={{ marginBottom:16 }} />
+            <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:14, color:"rgba(255,240,225,.65)", lineHeight:1.7, fontWeight:300 }}>
+              Four movements, observed over months. Nothing is hurried and nothing is left to chance — the path from raw essence to living scent is measured in weeks, not minutes.
             </p>
-            <button className="liquid-glass flex items-center gap-2" style={{ borderRadius:9999, padding:"11px 22px", fontSize:13, fontFamily:"'Barlow',sans-serif", color:"#fff", border:"none", cursor:"pointer", whiteSpace:"nowrap" }}>
-              Begin a Commission <ArrowUpRight />
-            </button>
           </div>
-        </FadeUp>
+        </div>
+      </div>
+      <div className="rit-track" ref={trackRef}>
+        <div className="rit-stage">
+          <div className="rit-glow" />
+          <div className="rit-mark serif" aria-hidden="true">Rituel</div>
+          <div className="rit-grid">
+            <div className="rit-bottle">
+              <span className="smoke" style={{ width:260, height:260, left:-60, top:20, background:"rgba(201,138,75,.22)" }} />
+              <span className="smoke" style={{ width:200, height:200, right:-70, top:140, background:"rgba(255,225,190,.12)", animationDelay:"-9s" }} />
+              <Flacon liqRef={liqRef} />
+              <div className="rit-pedestal" />
+            </div>
+            <ol className="rit-list">
+              <div className="rit-rail" aria-hidden="true"><i /></div>
+              {steps.map((step, i) => (
+                <li key={i} className={`rit-step${active === i ? " on" : ""}${i < active ? " done" : ""}`}>
+                  <div className="rit-row">
+                    <span className="rit-num serif">{step.num}</span>
+                    <h3 className="rit-title serif">{step.title}</h3>
+                  </div>
+                  <p className="rit-meta">{step.meta}</p>
+                  <div className="rit-body"><div><p>{step.body}</p></div></div>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </div>
+      </div>
+      <div className="rit-foot">
+        <p className="serif" style={{ fontSize:"clamp(1.4rem,3vw,2.2rem)", color:"rgba(255,240,225,.9)", letterSpacing:"-.5px" }}>
+          Every private commission follows the rituel.
+        </p>
+        <button className="liquid-glass flex items-center gap-2" style={{ borderRadius:9999, padding:"12px 24px", fontSize:13, fontFamily:"'Barlow',sans-serif", color:"#fff", border:"none", cursor:"pointer", whiteSpace:"nowrap" }}>
+          Begin a Commission <ArrowUpRight />
+        </button>
       </div>
     </section>
   );
@@ -624,43 +874,49 @@ function TestimonialsSection() {
     { quote:"The flacon alone is a work of art. I've placed it on my vanity like a sculpture. The scent inside is even more extraordinary.", author:"Yuki M.", location:"Tokyo", detail:"Édition Nocturne · Flacon 214/500" },
   ];
 
+
+  const boneRef = useRef(null);
+  useScrollP(boneRef, "pass", (p, el) => {
+    const r = el.getBoundingClientRect();
+    document.body.classList.toggle("nav-light", r.top < 70 && r.bottom > 70);
+  });
+
+  const cls = ["t-feature", "t-a t-small", "t-b t-small"];
   return (
-    <section className="sec-testi ambient grain" style={{ background:"#000" }}>
-      <FadeUp>
-        <p style={{ fontSize:14, fontFamily:"'Barlow',sans-serif", color:"rgba(255,255,255,0.6)", marginBottom:16, letterSpacing:"0.08em", textTransform:"uppercase" }}>// Testimonials</p>
-        <div className="flex flex-wrap items-end justify-between gap-6 mb-10 md:mb-16">
-          <h2 className="title-esp-2" style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", color:"#fff", fontSize:"clamp(2.25rem,5vw,4rem)", lineHeight:0.9 }}>
-            Worn and remembered
+    <section className="bone" id="sec-testi" ref={boneRef}>
+      <div className="t-ring" aria-hidden="true" />
+      <div className="bone-in">
+        <p className="eyebrow" style={{ color:"rgba(23,17,12,.6)", marginBottom:20 }}>// Testimonials</p>
+        <div className="flex flex-wrap items-end justify-between gap-8">
+          <h2 className="serif bone-title">
+            <Mask>Worn and</Mask>
+            <Mask delay={0.12} className="md:pl-[12vw]">remembered</Mask>
           </h2>
-          <div className="liquid-glass flex items-center gap-3" style={{ borderRadius:9999, padding:"9px 18px" }}>
-            <span className="stars">★★★★★</span>
-            <span style={{ fontFamily:"'Barlow',sans-serif", fontSize:12, color:"rgba(255,255,255,0.7)", fontWeight:300 }}>5.0 · 2,413 verified reviews</span>
+          <div className="bone-pill">
+            <span className="bone-stars">★★★★★</span>
+            <span>5.0 · 2,413 verified reviews</span>
           </div>
         </div>
-      </FadeUp>
-
-      <div className="grid-3">
-        {testimonials.map((t, i) => (
-          <FadeUp key={i} delay={i * 0.1}>
-            <div className="liquid-glass" style={{ borderRadius:"1.25rem", padding:32, minHeight:260, display:"flex", flexDirection:"column", justifyContent:"space-between" }}>
-              <span aria-hidden="true" style={{ position:"absolute", top:-8, right:18, fontFamily:"'Instrument Serif',serif", fontStyle:"italic", fontSize:"6rem", color:"rgba(255,255,255,0.07)", lineHeight:1, pointerEvents:"none" }}>"</span>
-              <div>
-                <span className="stars" style={{ display:"block", marginBottom:14 }}>★★★★★</span>
-                <p style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", fontSize:"1.15rem", color:"rgba(255,255,255,0.9)", lineHeight:1.6, letterSpacing:"-0.3px" }}>"{t.quote}"</p>
-              </div>
-              <div style={{ marginTop:24, paddingTop:20, borderTop:"1px solid rgba(255,255,255,0.08)" }}>
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:13, color:"#fff", fontWeight:500 }}>{t.author}</p>
-                    <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:12, color:"rgba(255,255,255,0.45)", marginTop:2 }}>{t.location}</p>
+        <div className="t-grid">
+          {testimonials.map((t, i) => (
+            <div key={i} className={cls[i] || "t-small"}>
+             <FadeUp delay={i * 0.1}>
+              <figure className="t-card" style={{ margin:0 }}>
+                {i === 0 && <span className="t-mark serif" aria-hidden="true">“</span>}
+                <span className="bone-stars" style={{ display:"block", marginBottom:14 }}>★★★★★</span>
+                <blockquote className="t-quote serif">“{t.quote}”</blockquote>
+                <figcaption className="t-meta">
+                  <div className="flex items-start justify-between gap-3">
+                    <div><b>{t.author}</b><br /><span>{t.location}</span></div>
+                    <span style={{ border:"1px solid rgba(23,17,12,.25)", borderRadius:9999, padding:"3px 11px", fontSize:10 }}>Verified</span>
                   </div>
-                  <span className="liquid-glass" style={{ borderRadius:9999, padding:"4px 11px", fontSize:10, color:"rgba(255,255,255,0.65)", fontFamily:"'Barlow',sans-serif", whiteSpace:"nowrap", flexShrink:0 }}>Verified</span>
-                </div>
-                <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:11, color:"rgba(255,255,255,0.35)", marginTop:12, fontWeight:300 }}>{t.detail}</p>
-              </div>
+                  <em>{t.detail}</em>
+                </figcaption>
+              </figure>
+             </FadeUp>
             </div>
-          </FadeUp>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -677,54 +933,45 @@ function FAQSection() {
   const [open, setOpen] = useState(null);
 
   return (
-    <section className="sec-faq ambient grain" style={{ background:"#000" }}>
-      <div style={{ maxWidth:1100, margin:"0 auto" }}>
+    <section className="cedar grain" id="sec-faq">
+      <div className="cedar-q serif" aria-hidden="true">?</div>
+      <div style={{ maxWidth:1200, margin:"0 auto" }}>
         <div className="faq-grid">
-          <FadeUp>
-            <p style={{ fontSize:14, fontFamily:"'Barlow',sans-serif", color:"rgba(255,255,255,0.6)", marginBottom:16, letterSpacing:"0.08em", textTransform:"uppercase" }}>// Questions</p>
-            <h2 className="title-esp-2" style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", color:"#fff", fontSize:"clamp(2.25rem,5vw,4rem)", lineHeight:0.9 }}>
-              The curious ask
+          <div className="faq-side">
+            <p className="eyebrow" style={{ color:"rgba(215,240,222,.6)", marginBottom:16 }}>// Questions</p>
+            <h2 className="serif title-esp-2" style={{ color:"#fff", fontSize:"clamp(3rem,7vw,6rem)", lineHeight:.9 }}>
+              <Mask>The curious</Mask><Mask delay={0.12}>ask</Mask>
             </h2>
-            <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:14, color:"rgba(255,255,255,0.6)", lineHeight:1.75, fontWeight:300, maxWidth:"36ch", marginTop:20 }}>
+            <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:14, color:"rgba(225,240,230,.65)", lineHeight:1.75, fontWeight:300, maxWidth:"36ch", marginTop:24 }}>
               Everything worth knowing before your first flacon. For anything not covered here, our client advisors reply within one business day.
             </p>
             <button className="liquid-glass flex items-center gap-2" style={{ borderRadius:9999, padding:"11px 22px", fontSize:13, fontFamily:"'Barlow',sans-serif", color:"#fff", border:"none", cursor:"pointer", marginTop:28, whiteSpace:"nowrap" }}>
               Ask a Question <ArrowUpRight />
             </button>
             <div className="hairline" style={{ marginTop:36, maxWidth:220 }} />
-            <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:12, color:"rgba(255,255,255,0.4)", marginTop:16, fontWeight:300, lineHeight:1.7 }}>
-              Client Services · Monday to Saturday<br/>9h – 19h CET
+            <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:12, color:"rgba(225,240,230,.45)", marginTop:16, fontWeight:300, lineHeight:1.7 }}>
+              Client Services · Monday to Saturday<br />9h – 19h CET
             </p>
-          </FadeUp>
-
+          </div>
           <div>
             {faqs.map((faq, i) => (
-              <FadeUp key={i} delay={i * 0.08}>
-                <div style={{ borderBottom:"1px solid rgba(255,255,255,0.08)" }}>
-                  <button onClick={() => setOpen(open === i ? null : i)}
-                    style={{ width:"100%", display:"flex", alignItems:"center", justifyContent:"space-between", padding:"22px 0", background:"none", border:"none", cursor:"pointer", textAlign:"left" }}>
-                    <span style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", fontSize:"1.25rem", color:"#fff", letterSpacing:"-0.3px", paddingRight:24 }}>{faq.q}</span>
-                    <PlusIcon open={open === i} />
-                  </button>
-                  <div className={`accord-body${open === i ? " open" : ""}`}>
-                    <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:14, color:"rgba(255,255,255,0.65)", lineHeight:1.75, fontWeight:300, paddingBottom:22, maxWidth:"60ch" }}>{faq.a}</p>
-                  </div>
+              <div key={i} className={`faq-row${open === i ? " open" : ""}`}>
+                <button className="faq-btn" onClick={() => setOpen(open === i ? null : i)} aria-expanded={open === i}>
+                  <span className="faq-n serif">0{i + 1}</span>
+                  <span className="serif" style={{ flex:1, fontSize:"1.3rem", color:"#fff", letterSpacing:"-.3px", lineHeight:1.2, paddingRight:16 }}>{faq.q}</span>
+                  <PlusIcon open={open === i} />
+                </button>
+                <div className={`accord-body${open === i ? " open" : ""}`}>
+                  <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:14, color:"rgba(225,240,230,.7)", lineHeight:1.75, fontWeight:300, padding:"0 0 26px calc(2.4ch + 20px)", maxWidth:"64ch" }}>{faq.a}</p>
                 </div>
-              </FadeUp>
+              </div>
             ))}
           </div>
         </div>
-
-        <FadeUp delay={0.1}>
-          <div className="flex flex-wrap items-center justify-between gap-4" style={{ marginTop:56, paddingTop:28, borderTop:"1px solid rgba(255,255,255,0.1)" }}>
-            <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:13, color:"rgba(255,255,255,0.5)", fontWeight:300 }}>
-              Still curious? Write to our client advisors —
-            </p>
-            <span style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", fontSize:"1.15rem", color:"#fff", letterSpacing:"-0.3px", cursor:"pointer" }}>
-              client.services@aeon-parfums.com
-            </span>
-          </div>
-        </FadeUp>
+        <div className="flex flex-wrap items-center justify-between gap-4" style={{ marginTop:64, paddingTop:28, borderTop:"1px solid rgba(220,240,225,.14)" }}>
+          <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:13, color:"rgba(225,240,230,.55)", fontWeight:300 }}>Still curious? Write to our client advisors —</p>
+          <span className="serif" style={{ fontSize:"1.15rem", color:"#fff", letterSpacing:"-.3px", cursor:"pointer" }}>client.services@aeon-parfums.com</span>
+        </div>
       </div>
     </section>
   );
@@ -732,34 +979,44 @@ function FAQSection() {
 
 /* ── CTA Banner ──────────────────────────────────────────────────────────── */
 function CTABanner() {
+
+  const secRef = useRef(null);
+  useScrollP(secRef, "pass", (p, el) => {
+    const t = Math.min(1, p / 0.5), e = 1 - Math.pow(1 - t, 3);
+    el.style.setProperty("--inset", ((1 - e) * 6).toFixed(2) + "vw");
+    el.style.setProperty("--rad", ((1 - e) * 32).toFixed(1) + "px");
+    el.style.setProperty("--vs", (1.12 - 0.12 * e).toFixed(3));
+  });
+
   return (
-    <section className="sec-cta ambient grain" style={{ background:"#000" }}>
-      <FadeUp>
-        <div className="liquid-glass cta-card" style={{ borderRadius:"1.5rem", display:"flex", alignItems:"center", justifyContent:"space-between", gap:48, flexWrap:"wrap" }}>
-          <span aria-hidden="true" style={{ position:"absolute", right:-50, top:-70, width:280, height:280, borderRadius:"50%", background:"radial-gradient(circle, rgba(255,255,255,0.14), transparent 70%)", pointerEvents:"none" }} />
-          <div style={{ position:"relative" }}>
-            <p style={{ fontSize:13, fontFamily:"'Barlow',sans-serif", color:"rgba(255,255,255,0.5)", marginBottom:12, letterSpacing:"0.08em", textTransform:"uppercase" }}>Private Consultation</p>
-            <h2 className="title-esp-2" style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", color:"#fff", fontSize:"clamp(1.875rem,4vw,3.25rem)", lineHeight:0.95 }}>
-              Your signature scent<br/>awaits discovery
-            </h2>
-            <div className="flex flex-wrap gap-x-5 gap-y-2" style={{ marginTop:22 }}>
+    <section className="cta2" id="sec-cta">
+      <div className="cta-stage" ref={secRef}>
+        <FadingVideo src={ATELIER_VIDEO} />
+        <div className="cta-veil" />
+        <div className="cta-content">
+          <p className="eyebrow" style={{ color:"rgba(255,235,210,.75)", marginBottom:20 }}>Private Consultation</p>
+          <h2 className="serif cta-title">
+            <Mask>Your signature scent</Mask><Mask delay={0.12}>awaits discovery</Mask>
+          </h2>
+          <div className="cta-row">
+            <div className="flex flex-wrap gap-x-6 gap-y-2" style={{ maxWidth:520 }}>
               {["Complimentary engraving","Insured worldwide delivery","Three samples with every order"].map(item => (
-                <span key={item} className="flex items-center gap-2" style={{ fontFamily:"'Barlow',sans-serif", fontSize:12, color:"rgba(255,255,255,0.6)", fontWeight:300 }}>
-                  <span aria-hidden="true" style={{ fontSize:8, color:"rgba(255,255,255,0.9)" }}>◆</span> {item}
+                <span key={item} className="flex items-center gap-2" style={{ fontFamily:"'Barlow',sans-serif", fontSize:13, color:"rgba(255,240,225,.8)", fontWeight:300 }}>
+                  <span aria-hidden="true" style={{ fontSize:8, color:"var(--amber)" }}>◆</span> {item}
                 </span>
               ))}
             </div>
-          </div>
-          <div className="flex flex-wrap gap-4" style={{ position:"relative" }}>
-            <button className="liquid-glass-strong" style={{ borderRadius:9999, padding:"12px 28px", fontSize:14, fontFamily:"'Barlow',sans-serif", color:"#fff", border:"none", cursor:"pointer", display:"flex", alignItems:"center", gap:8 }}>
-              Book a Consultation <ArrowUpRight />
-            </button>
-            <button className="liquid-glass" style={{ borderRadius:9999, padding:"12px 28px", fontSize:14, fontFamily:"'Barlow',sans-serif", color:"rgba(255,255,255,0.85)", border:"none", cursor:"pointer" }}>
-              Request Samples
-            </button>
+            <div className="flex flex-wrap gap-4">
+              <button className="liquid-glass-strong" style={{ borderRadius:9999, padding:"14px 30px", fontSize:14, fontFamily:"'Barlow',sans-serif", color:"#fff", border:"none", cursor:"pointer", display:"flex", alignItems:"center", gap:8 }}>
+                Book a Consultation <ArrowUpRight />
+              </button>
+              <button className="liquid-glass" style={{ borderRadius:9999, padding:"14px 30px", fontSize:14, fontFamily:"'Barlow',sans-serif", color:"rgba(255,255,255,.88)", border:"none", cursor:"pointer" }}>
+                Request Samples
+              </button>
+            </div>
           </div>
         </div>
-      </FadeUp>
+      </div>
     </section>
   );
 }
@@ -773,30 +1030,48 @@ function Footer() {
     { heading:"Contact", links:["Paris Boutique","London Boutique","New York Boutique","Client Services","Wholesale Enquiries"] },
   ];
 
+
+  const footRef = useRef(null);
+  useScrollP(footRef, "pass", (p, el) => { el.style.setProperty("--fp", Math.min(1, p * 1.25).toFixed(3)); });
+  const boutiques = [
+    { city:"Paris", detail:"14 Rue Saint-Honoré · Mon–Sat 10–19" },
+    { city:"London", detail:"Mount Street, Mayfair · Mon–Sat 10–18" },
+    { city:"New York", detail:"Madison Avenue · Mon–Sat 10–19" },
+    { city:"Tokyo", detail:"Ginza Six, Chuo-ku · Daily 11–20" },
+  ];
+
   return (
-    <footer className="sec-footer ambient grain">
+    <footer className="foot grain" ref={footRef}>
+      <p className="eyebrow" style={{ color:"rgba(255,235,210,.45)", marginBottom:20 }}>Boutiques</p>
+      <div className="foot-city">
+        {boutiques.map(b => (
+          <div key={b.city}>
+            <p className="serif" style={{ fontSize:"clamp(1.6rem,3vw,2.4rem)", color:"#fff", letterSpacing:"-.8px", lineHeight:1 }}>{b.city}</p>
+            <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:12, color:"rgba(255,235,210,.5)", fontWeight:300, lineHeight:1.5, marginTop:10 }}>{b.detail}</p>
+          </div>
+        ))}
+      </div>
       <div className="grid-footer">
-        {/* Brand column */}
         <div>
           <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:24 }}>
             <div className="liquid-glass" style={{ width:42, height:42, borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center" }}>
-              <span style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", fontSize:"1.25rem", color:"#fff" }}>æ</span>
+              <span className="serif" style={{ fontSize:"1.25rem", color:"#fff" }}>ae</span>
             </div>
-            <span style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", fontSize:"1.5rem", color:"#fff", letterSpacing:"-1px" }}>AEON</span>
+            <span className="serif" style={{ fontSize:"1.5rem", color:"#fff", letterSpacing:"-1px" }}>AEON</span>
           </div>
-          <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:13, color:"rgba(255,255,255,0.45)", lineHeight:1.75, fontWeight:300, maxWidth:"28ch" }}>
+          <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:13, color:"rgba(255,235,210,.55)", lineHeight:1.75, fontWeight:300, maxWidth:"28ch" }}>
             Haute parfumerie founded in Paris, 1923. Crafted with obsession. Worn with intention.
           </p>
           <div style={{ display:"flex", gap:10, marginTop:24 }}>
             {["IG","TW","FB","PT"].map((s,i) => (
               <div key={i} className="liquid-glass" style={{ width:34, height:34, borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer" }}>
-                <span style={{ fontFamily:"'Barlow',sans-serif", fontSize:10, color:"rgba(255,255,255,0.7)", fontWeight:500 }}>{s}</span>
+                <span style={{ fontFamily:"'Barlow',sans-serif", fontSize:10, color:"rgba(255,255,255,.75)", fontWeight:500 }}>{s}</span>
               </div>
             ))}
           </div>
           <div style={{ marginTop:28 }}>
-            <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:11, color:"rgba(255,255,255,0.4)", letterSpacing:"0.1em", textTransform:"uppercase", marginBottom:8 }}>Correspondence</p>
-            <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:12, color:"rgba(255,255,255,0.55)", marginBottom:12, fontWeight:300, lineHeight:1.6, maxWidth:"34ch" }}>
+            <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:11, color:"rgba(255,235,210,.45)", letterSpacing:"0.1em", textTransform:"uppercase", marginBottom:8 }}>Correspondence</p>
+            <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:12, color:"rgba(255,235,210,.6)", marginBottom:12, fontWeight:300, lineHeight:1.6, maxWidth:"34ch" }}>
               Private previews and seasonal releases, sent twice a year.
             </p>
             <div className="flex gap-2" style={{ maxWidth:340 }}>
@@ -807,47 +1082,27 @@ function Footer() {
             </div>
           </div>
         </div>
-
         {cols.map((col, i) => (
           <div key={i}>
-            <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:11, color:"rgba(255,255,255,0.4)", letterSpacing:"0.1em", textTransform:"uppercase", marginBottom:20 }}>{col.heading}</p>
+            <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:11, color:"rgba(255,235,210,.45)", letterSpacing:"0.1em", textTransform:"uppercase", marginBottom:20 }}>{col.heading}</p>
             {col.links.map((link, j) => (
-              <p key={j} style={{ fontFamily:"'Barlow',sans-serif", fontSize:13, color:"rgba(255,255,255,0.65)", marginBottom:10, cursor:"pointer", fontWeight:300, lineHeight:1.4 }}
-                onMouseEnter={e => e.target.style.color="#fff"} onMouseLeave={e => e.target.style.color="rgba(255,255,255,0.65)"}>
+              <p key={j} style={{ fontFamily:"'Barlow',sans-serif", fontSize:13, color:"rgba(255,240,225,.68)", marginBottom:10, cursor:"pointer", fontWeight:300, lineHeight:1.4, transition:"color .3s" }}
+                onMouseEnter={e => e.target.style.color="#fff"} onMouseLeave={e => e.target.style.color="rgba(255,240,225,.68)"}>
                 {link}
               </p>
             ))}
           </div>
         ))}
       </div>
-
-      <FadeUp>
-        <div style={{ paddingTop:36, borderTop:"1px solid rgba(255,255,255,0.08)", marginBottom:40 }}>
-          <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:11, color:"rgba(255,255,255,0.4)", letterSpacing:"0.1em", textTransform:"uppercase", marginBottom:20 }}>Boutiques</p>
-          <div className="flex flex-wrap gap-x-10 gap-y-5">
-            {[
-              { city:"Paris", detail:"14 Rue Saint-Honoré · Mon–Sat 10–19" },
-              { city:"London", detail:"Mount Street, Mayfair · Mon–Sat 10–18" },
-              { city:"New York", detail:"Madison Avenue · Mon–Sat 10–19" },
-              { city:"Tokyo", detail:"Ginza Six, Chuo-ku · Daily 11–20" },
-            ].map(b => (
-              <div key={b.city} style={{ minWidth:220 }}>
-                <p style={{ fontFamily:"'Instrument Serif',serif", fontStyle:"italic", fontSize:"1.2rem", color:"#fff", letterSpacing:"-0.4px", marginBottom:4 }}>{b.city}</p>
-                <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:12, color:"rgba(255,255,255,0.45)", fontWeight:300, lineHeight:1.5 }}>{b.detail}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </FadeUp>
-
-      <div className="flex flex-wrap items-center justify-between gap-4" style={{ borderTop:"1px solid rgba(255,255,255,0.06)", paddingTop:32 }}>
-        <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:12, color:"rgba(255,255,255,0.3)", fontWeight:300 }}>© 2025 Maison AEON. All rights reserved. Paris · London · New York · Tokyo.</p>
+      <div className="flex flex-wrap items-center justify-between gap-4" style={{ borderTop:"1px solid rgba(255,235,210,.1)", paddingTop:28 }}>
+        <p style={{ fontFamily:"'Barlow',sans-serif", fontSize:12, color:"rgba(255,235,210,.4)", fontWeight:300 }}>© 2025 Maison AEON. All rights reserved. Paris · London · New York · Tokyo.</p>
         <div className="flex flex-wrap gap-x-6 gap-y-2">
           {["Privacy Policy","Terms of Use","Cookie Preferences"].map((l,i) => (
-            <span key={i} style={{ fontFamily:"'Barlow',sans-serif", fontSize:12, color:"rgba(255,255,255,0.3)", cursor:"pointer" }}>{l}</span>
+            <span key={i} style={{ fontFamily:"'Barlow',sans-serif", fontSize:12, color:"rgba(255,235,210,.4)", cursor:"pointer" }}>{l}</span>
           ))}
         </div>
       </div>
+      <div className="foot-mark serif" aria-hidden="true">AEON</div>
     </footer>
   );
 }
